@@ -2,7 +2,7 @@
 #include "ui_applicationwindow.h"
 #include <QDebug>
 
-ApplicationWindow::ApplicationWindow(QString userName, QWidget *parent) :
+ApplicationWindow::ApplicationWindow(string userName, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ApplicationWindow)
 {
@@ -17,5 +17,5 @@ ApplicationWindow::~ApplicationWindow()
 
 void ApplicationWindow::on_pushButton_clicked()
 {
-    qDebug() << this->userName;
+    qDebug() << QString::fromStdString(this->userName);
 }

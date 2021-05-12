@@ -2,7 +2,9 @@
 #define APPLICATIONWINDOW_H
 
 #include <QWidget>
-#include <QString>
+#include <string.h>
+using namespace std;
+
 namespace Ui {
 class ApplicationWindow;
 }
@@ -12,7 +14,7 @@ class ApplicationWindow : public QWidget
     Q_OBJECT
 
 public:
-    explicit ApplicationWindow(QString userName, QWidget *parent = nullptr);
+    explicit ApplicationWindow(string userName, QWidget *parent = nullptr);
     ~ApplicationWindow();
 
 private slots:
@@ -20,7 +22,7 @@ private slots:
 
 private:
     Ui::ApplicationWindow *ui;
-    QString userName;
+    string userName;
 };
 
 #endif // APPLICATIONWINDOW_H
