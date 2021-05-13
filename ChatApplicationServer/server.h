@@ -24,7 +24,7 @@ public:
     Server();
     WSADATA wsData;
     WORD ver = MAKEWORD(2, 2);
-    int wsOk;
+    int wsResult;
     static SOCKET listeningSocket;
 
     NewClientListener *runThread;

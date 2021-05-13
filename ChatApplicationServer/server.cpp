@@ -10,8 +10,8 @@ SOCKET Server::listeningSocket;
 
 Server::Server(){
     // init winsock
-    wsOk = WSAStartup(ver, &wsData);
-    if(wsOk != 0){
+    wsResult = WSAStartup(ver, &wsData);
+    if(wsResult != 0){
         cout << "Initialize Winsock problem! Quitting..." << endl;
         return;
     }
@@ -32,21 +32,18 @@ Server::Server(){
     hint.sin_addr.S_un.S_addr = INADDR_ANY;
 
     bind(listeningSocket, (sockaddr*)&hint, sizeof (hint));
-
-    cout << "Bind..." <<endl;
 }
 
 
 void Server::Start(){
-    cout << "aloo" << endl;
     listen(listeningSocket, SOMAXCONN);
 
     isServerRunning = 1;
 
     runThread = new NewClientListener();
-    thread t(&NewClientListener::Run, runThread);
-    cout<<t.get_id() << endl;
-    t.join();
+    thread newThread(&NewClientListener::Run, runThread);
+    cout << newThread.get_id() << endl;
+    newThread.join();
 }
 
 NewClientListener::NewClientListener(){

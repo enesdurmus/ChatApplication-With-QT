@@ -4,7 +4,7 @@
 #include <QDebug>
 #include <winsock2.h>
 #include <ws2tcpip.h>
-
+#include "client.h"
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -26,6 +26,8 @@ MainWindow::~MainWindow()
 void MainWindow::on_loginButton_clicked()
 {
     ApplicationWindow *nw = new ApplicationWindow(ui->userNameTextField->toPlainText().toStdString());
+    Client *client = new Client();
+    client->ConnectToServer();
     nw->show();
     this->close();
 }
