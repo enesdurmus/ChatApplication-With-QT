@@ -7,7 +7,6 @@ using namespace std;
 int Server::isServerRunning = 0;
 SOCKET Server::listeningSocket;
 
-
 Server::Server(){
     // init winsock
     wsResult = WSAStartup(ver, &wsData);
@@ -34,6 +33,9 @@ Server::Server(){
     bind(listeningSocket, (sockaddr*)&hint, sizeof (hint));
 }
 
+Server::~Server(){
+
+}
 
 void Server::Start(){
     listen(listeningSocket, SOMAXCONN);
@@ -50,6 +52,12 @@ NewClientListener::NewClientListener(){
 
 }
 
+NewClientListener::~NewClientListener(){
+
+}
+
+
+
 void NewClientListener::Run(){
     while(Server::isServerRunning == 1){
         cout << "Waiting for client..." << endl;
@@ -57,12 +65,25 @@ void NewClientListener::Run(){
         int newClientSize = sizeof (newClient);
         SOCKET clientSocket = accept(Server::listeningSocket, (sockaddr*)&newClient, &newClientSize);
         Client *nClient = new Client(clientSocket);
+     /*   int sendResult = send(clientSocket, s.c_str(), 4096, 0);
+        if(sendResult == SOCKET_ERROR){
+            cout << "gitti" << WSAGetLastError() << endl;
+        }*/
+        char buff[4096];
+        int bytesReceived = recv(clientSocket, buff, 4096, 0);
+        if(bytesReceived != SOCKET_ERROR){
+            cout << string(buff, 0, bytesReceived) << endl;
+        }
+        string s = "clienta  gonder";
+        int sendResult = send(Server::listeningSocket, s.c_str(), s.size() + 1, 0);
+        if(sendResult != SOCKET_ERROR){
+            cout << "gitti" << endl;
+        }
     }
 }
 
 Client::Client(SOCKET socket){
     this->socket = socket;
-    cout << "naber amk" << endl;
 }
 
 

@@ -7,6 +7,8 @@
 class Client{
 public:
     Client(SOCKET socket);
+    ~Client();
+
     SOCKET socket;
 };
 
@@ -14,6 +16,7 @@ public:
 class NewClientListener{
 public:
     NewClientListener();
+    ~NewClientListener();
 
     void Run();
 };
@@ -22,6 +25,8 @@ public:
 class Server{
 public:
     Server();
+    ~Server();
+
     WSADATA wsData;
     WORD ver = MAKEWORD(2, 2);
     int wsResult;
@@ -37,6 +42,7 @@ public:
 class ClientListener{
 public:
     ClientListener();
+    ~ClientListener();
 
 };
 
