@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QTcpSocket>
+#include "Server.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -14,13 +14,15 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget *parent = nullptr);
+    Server *server;
     ~MainWindow();
-    QTcpSocket *socket;
 
 private slots:
-    void on_connectButton_clicked();
+    void on_startServerButton_clicked();
 
-    void on_QuitButton_clicked();
+    void on_sendButton_clicked();
+
+    void on_quitButton_clicked();
 
 private:
     Ui::MainWindow *ui;

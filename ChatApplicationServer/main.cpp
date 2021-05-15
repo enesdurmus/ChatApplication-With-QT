@@ -1,11 +1,11 @@
-#include <iostream>
-#include "server.h"
+#include "mainwindow.h"
 
-using namespace std;
+#include <QApplication>
 
-int main()
+int main(int argc, char *argv[])
 {
-    Server *server = new Server();
-    server->Start();
-    return 0;
+    QApplication a(argc, argv);
+    MainWindow w;
+    w.show();
+    return a.exec();
 }

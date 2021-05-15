@@ -1,4 +1,5 @@
 QT       += core gui
+QT += network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -8,21 +9,14 @@ CONFIG += c++11
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-LIBS += -lws2_32
-
 SOURCES += \
-    applicationwindow.cpp \
-    client.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
-    applicationwindow.h \
-    client.h \
     mainwindow.h
 
 FORMS += \
-    applicationwindow.ui \
     mainwindow.ui
 
 # Default rules for deployment.

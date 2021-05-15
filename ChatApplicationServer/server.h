@@ -1,52 +1,35 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-#include <winsock2.h>
-#include <ws2tcpip.h>
+#include <QTcpServer>
+
+class Client;
+
+
+class Server : public QTcpServer{
+
+    Q_OBJECT
+
+public:
+    explicit Server(QObject *parent = 0);
+    static void Send(const QString &msg);
+    static QTcpSocket *socket;
+    static QList<Client> clients;
+    static int idCounter;
+protected:
+    void incomingConnection(qintptr socketDescriptor) override;
+
+};
+
+
 
 class Client{
+
 public:
-    Client(SOCKET socket);
-    ~Client();
-
-    SOCKET socket;
-};
-
-
-class NewClientListener{
-public:
-    NewClientListener();
-    ~NewClientListener();
-
-    void Run();
-};
-
-
-class Server{
-public:
-    Server();
-    ~Server();
-
-    WSADATA wsData;
-    WORD ver = MAKEWORD(2, 2);
-    int wsResult;
-    static SOCKET listeningSocket;
-
-    NewClientListener *runThread;
-    //static Client clients[];
-    static int isServerRunning;
-    void Start();
-};
-
-
-class ClientListener{
-public:
-    ClientListener();
-    ~ClientListener();
+    Client(QTcpSocket*);
+    QTcpSocket *socket;
+    int id;
+    QString name = "null";
 
 };
-
-
-
-
 #endif // SERVER_H
