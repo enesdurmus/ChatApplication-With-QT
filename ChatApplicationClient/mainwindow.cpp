@@ -24,10 +24,20 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_connectButton_clicked()
 {
-    socket->connectToHost(ui->serverIpTextBox->text(), ui->portTextBox->value());
+    //socket->connectToHost(ui->serverIpTextBox->text(), ui->portTextBox->value());
+    socket->connectToHost("localhost", 2000);
 }
 
 void MainWindow::on_QuitButton_clicked()
 {
 
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    QByteArray block;
+    QDataStream out(&block, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_0);
+    out << "msg";
+    socket->write(block);
 }

@@ -2,9 +2,11 @@
 #define SERVER_H
 
 #include <QTcpServer>
+#include <QThread>
+#include <QTcpSocket>
 
 class Client;
-
+class ClientListenerThread;
 
 class Server : public QTcpServer{
 
@@ -12,9 +14,9 @@ class Server : public QTcpServer{
 
 public:
     explicit Server(QObject *parent = 0);
-    static void Send(const QString &msg);
+    static void Send(Client *c, const QString &msg);
     static QTcpSocket *socket;
-    static QList<Client> clients;
+    static QList<Client*> *clients;
     static int idCounter;
 protected:
     void incomingConnection(qintptr socketDescriptor) override;
@@ -22,14 +24,22 @@ protected:
 };
 
 
+class Client : public QThread{
 
-class Client{
+    Q_OBJECT
 
 public:
-    Client(QTcpSocket*);
+    Client(qintptr socketDescriptor);
+
+    ~Client();
+    qintptr socketDescriptor;
     QTcpSocket *socket;
     int id;
     QString name = "null";
+    //ClientListenerThread *listenerThread;
+    void run() override;
 
 };
+
+
 #endif // SERVER_H
