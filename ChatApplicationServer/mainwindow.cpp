@@ -27,7 +27,9 @@ void MainWindow::on_startServerButton_clicked()
 
 void MainWindow::on_sendButton_clicked()
 {
-    server->Send(Server::clients->at(ui->portNumberTextBox->value()) ,ui->messageTextBox->text());
+    QMap<QString, QString> msg;
+    msg.insert("message", ui->messageTextBox->text());
+    server->Send(Server::clients->at(ui->portNumberTextBox->value()) ,msg);
 }
 
 void MainWindow::on_quitButton_clicked()

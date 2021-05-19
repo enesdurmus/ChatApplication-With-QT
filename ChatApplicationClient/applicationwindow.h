@@ -2,8 +2,8 @@
 #define APPLICATIONWINDOW_H
 
 #include <QWidget>
-#include <QTcpSocket>
 #include <QMap>
+#include "Client.h"
 
 namespace Ui {
 class ApplicationWindow;
@@ -16,9 +16,8 @@ class ApplicationWindow : public QWidget
 public:
     explicit ApplicationWindow(QString, int, QString, QWidget *parent = nullptr);
     ~ApplicationWindow();
-    void Send(QMap<QString, QString>);
+    void ReadServer();
     QTcpSocket *socket;
-    QString name;
 
     bool fileReading = false;
     int fileSize = 0;

@@ -14,7 +14,8 @@ class Server : public QTcpServer{
 
 public:
     explicit Server(QObject *parent = 0);
-    static void Send(Client *c, const QString &msg);
+    static void Send(Client *c, const QMap<QString, QString> &msg);
+    static void BroadCast(const QMap<QString, QString> &msg);
     static QTcpSocket *socket;
     static QList<Client*> *clients;
     static int idCounter;
@@ -35,7 +36,7 @@ public:
     QTcpSocket *socket;
     int id;
     QString name = "null";
-    //ClientListenerThread *listenerThread;
+    QString room = "null";
     void run() override;
 
 };

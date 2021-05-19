@@ -6,13 +6,15 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
     QWidget(parent),
     ui(new Ui::ApplicationWindow)
 {
+    Client *theClient = new Client();
+    theClient->name = name;
     socket = new QTcpSocket(this);
-    this->name = name;
     socket->connectToHost("localhost", 2000);
+    theClient->socket = socket;
 
-    //QMap<QString, QString> connectMap;
-    // connectMap.insert("connect", this->name);
-    //Send(connectMap);
+    QMap<QString, QString> connectMap;
+    connectMap.insert("connect", theClient->name);
+    theClient->Send(connectMap);
 
     ui->setupUi(this);
 
@@ -22,6 +24,7 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
         readStream >> map;
         qDebug() << map.keys().at(0) << endl;
         ui->listWidget->addItem(map.keys().at(0));*/
+
         QMap<QString, QString> map;
 
         if(this->fileReading){
@@ -45,7 +48,8 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
         }else{
             QDataStream readStream(socket);
             readStream >> map;
-            qDebug() << "laaa" << endl;
+            qDebug() << map.keys().at(1) << endl;
+
         }
 
         if(this->fileSize == this->receivingFileSize){
@@ -59,6 +63,16 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
             qDebug() << this->receivingFileSize << endl;
             qDebug() << "Receiving a file from server..." << endl;
         }
+        else if(map.value("type") == "receiveAllUsers"){
+            ui->usersListWidget->clear();
+            qDebug() << map.size() << endl;
+            QList<QString> users;
+            users = map.values();
+            for(int i = 1; i < map.size(); i++){
+                ui->usersListWidget->addItem(users.at(i));
+            }
+            qDebug() << "Receiving all users from server..." << endl;
+        }
     });
 }
 
@@ -67,7 +81,4 @@ ApplicationWindow::~ApplicationWindow()
     delete ui;
 }
 
-void ApplicationWindow::Send(QMap<QString, QString> map){
-    QDataStream sendStream(socket);
-    sendStream << map;
-}
+
