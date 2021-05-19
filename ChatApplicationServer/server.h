@@ -23,7 +23,6 @@ protected:
 
 };
 
-
 class Client : public QThread{
 
     Q_OBJECT

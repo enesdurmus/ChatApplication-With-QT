@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>408</width>
-    <height>401</height>
+    <width>334</width>
+    <height>292</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,9 +17,9 @@
    <widget class="QLineEdit" name="serverIpTextBox">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>130</x>
       <y>30</y>
-      <width>137</width>
+      <width>171</width>
       <height>22</height>
      </rect>
     </property>
@@ -27,9 +27,9 @@
    <widget class="QSpinBox" name="portTextBox">
     <property name="geometry">
      <rect>
-      <x>220</x>
-      <y>30</y>
-      <width>91</width>
+      <x>130</x>
+      <y>80</y>
+      <width>171</width>
       <height>22</height>
      </rect>
     </property>
@@ -40,50 +40,76 @@
    <widget class="QPushButton" name="connectButton">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>280</y>
-      <width>93</width>
-      <height>28</height>
+      <x>30</x>
+      <y>190</y>
+      <width>121</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string>Connect</string>
     </property>
    </widget>
    <widget class="QPushButton" name="QuitButton">
     <property name="geometry">
      <rect>
-      <x>280</x>
-      <y>310</y>
-      <width>93</width>
-      <height>28</height>
+      <x>180</x>
+      <y>190</y>
+      <width>121</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string>Quit</string>
     </property>
    </widget>
-   <widget class="QListWidget" name="listWidget">
+   <widget class="QLineEdit" name="userNameTextBox">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>130</x>
+      <y>130</y>
+      <width>171</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>130</y>
+      <width>81</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>UserName : </string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>30</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Host Address : </string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
       <y>80</y>
-      <width>256</width>
-      <height>192</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>120</x>
-      <y>310</y>
-      <width>93</width>
-      <height>28</height>
+      <width>81</width>
+      <height>16</height>
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string>Port Number : </string>
     </property>
    </widget>
   </widget>
@@ -92,7 +118,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>408</width>
+     <width>334</width>
      <height>26</height>
     </rect>
    </property>

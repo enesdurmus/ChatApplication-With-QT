@@ -28,7 +28,6 @@ void MainWindow::on_startServerButton_clicked()
 void MainWindow::on_sendButton_clicked()
 {
     server->Send(Server::clients->at(ui->portNumberTextBox->value()) ,ui->messageTextBox->text());
-    qDebug() << Server::clients->at(ui->portNumberTextBox->value())->socket->socketDescriptor() << endl;
 }
 
 void MainWindow::on_quitButton_clicked()

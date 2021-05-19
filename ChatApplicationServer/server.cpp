@@ -2,8 +2,8 @@
 #include <QTcpSocket>
 #include <QDataStream>
 #include <QtDebug>
+#include <QMap>
 #include <QFile>
-
 //------------------------------------------Server------------------------------------------
 
 int Server::idCounter = 0;
@@ -24,27 +24,44 @@ void Server::incomingConnection(qintptr socketDescriptor){
 void Server::Send(Client *c, const QString &msg){
     qDebug() << c->socket ->socketDescriptor() << endl;
 
-    QFile file("file.dat");
-    file.open(QIODevice::WriteOnly);
-    QDataStream out(&file);   // we will serialize the data into the file
-    out << QString("the answer is");   // serialize a string
+   /* QMap<QString, QByteArray> map;
+    map.insert("enes", msg);*/
+    //map.insert("mal", "str");
 
-    /*
-    QByteArray block;
-    QDataStream out(&block, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_0);
-    out << msg;
-    c->socket->write(block);
-    c->socket->flush();*/
+//    QDataStream sendStream(c->socket);
+    //sendStream << map;
+
+   // qDebug() << c->name << endl;
+
+    QFile file("C:/Users/X550V/Desktop/Proje2 (2).pdf");   //file path
+    file.open(QIODevice::ReadOnly);
+    QByteArray q = file.readAll();
+    qDebug() << q.size() << endl;
+
+    QMap<QString, QString> map;
+    map.insert("type", "file");
+    map.insert("size", QString::number(file.size()));
+    QDataStream sendStream(c->socket);
+    sendStream << map;
+
+    if(map.value("type") == "file"){
+        qDebug() << "girdi" << endl;
+        c->socket->write(q);
+    }
 }
 
 //------------------------------------------Client------------------------------------------
 
 Client::Client(qintptr socketDescriptor){
-    qDebug() << this->currentThread() << endl;
     this->socketDescriptor = socketDescriptor;
-    this->start();
+    this->id = Server::idCounter++;
+    this->socket = new QTcpSocket();
+    if (!this->socket->setSocketDescriptor(socketDescriptor)) {
+        qDebug() << "Error While Setting Socket " << this->socket->errorString() <<  endl;
+        return;
+    }
 
+    this->start();
     qDebug() << "New Client Created..." << endl;
 }
 
@@ -53,16 +70,14 @@ Client::~Client(){
 }
 
 void Client::run(){
-    this->id = Server::idCounter++;
-    this->socket = new QTcpSocket();
-    if (!this->socket->setSocketDescriptor(socketDescriptor)) {
-        qDebug() << "Error While Setting Socket " << this->socket->errorString() <<  endl;
-        return;
-    }
-
     connect(socket, &QTcpSocket::readyRead, [&](){
-        QDataStream T(socket);
-        in >>
+        QDataStream readStream(socket);
+        QMap<QString, QString> map;
+        readStream >> map;
+
+        if(map.keys().at(0) == "connect"){
+            this->name = map.value("connect");
+        }
     });
 
     this->exec();

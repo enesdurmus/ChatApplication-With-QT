@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QTcpSocket>
+#include "applicationwindow.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -15,14 +16,11 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    QTcpSocket *socket;
 
 private slots:
     void on_connectButton_clicked();
 
     void on_QuitButton_clicked();
-
-    void on_pushButton_clicked();
 
 private:
     Ui::MainWindow *ui;
