@@ -13,16 +13,19 @@ SOURCES += \
     Client.cpp \
     applicationwindow.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    roomchat.cpp
 
 HEADERS += \
     Client.h \
     applicationwindow.h \
-    mainwindow.h
+    mainwindow.h \
+    roomchat.h
 
 FORMS += \
     applicationwindow.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    roomchat.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

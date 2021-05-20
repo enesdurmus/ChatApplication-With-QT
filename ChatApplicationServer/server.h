@@ -36,7 +36,8 @@ public:
     QTcpSocket *socket;
     int id;
     QString name = "null";
-    QString room = "null";
+    QList<QString> rooms;
+    QList<QString> privateChats;
     void run() override;
 
 };

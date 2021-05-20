@@ -1,16 +1,14 @@
 #include "applicationwindow.h"
 #include "ui_applicationwindow.h"
-#include <QFile>
 
 ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ApplicationWindow)
 {
-    Client *theClient = new Client();
-    theClient->name = name;
-    socket = new QTcpSocket(this);
-    socket->connectToHost("localhost", 2000);
-    theClient->socket = socket;
+    Client *theClient = new Client(name);
+    theClient->socket = new QTcpSocket(this);
+    theClient->socket->connectToHost("localhost", 2000);
+    client = theClient;
 
     QMap<QString, QString> connectMap;
     connectMap.insert("connect", theClient->name);
@@ -18,17 +16,12 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
 
     ui->setupUi(this);
 
-    connect(socket, &QTcpSocket::readyRead, [&](){
-        /*QDataStream readStream(socket);
-        QMap<QString, QString> map;
-        readStream >> map;
-        qDebug() << map.keys().at(0) << endl;
-        ui->listWidget->addItem(map.keys().at(0));*/
+    connect(client->socket, &QTcpSocket::readyRead, [&](){
 
         QMap<QString, QString> map;
 
         if(this->fileReading){
-            QByteArray line = socket->readAll();
+            QByteArray line = client->socket->readAll();
 
             QFile target;
             target.setFileName("C:/Users/X550V/Desktop/aloo.pdf");
@@ -46,7 +39,7 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
             this->fileSize = target.size();
 
         }else{
-            QDataStream readStream(socket);
+            QDataStream readStream(client->socket);
             readStream >> map;
             qDebug() << map.keys().at(1) << endl;
 
@@ -80,5 +73,4 @@ ApplicationWindow::~ApplicationWindow()
 {
     delete ui;
 }
-
 

@@ -17,11 +17,14 @@ public:
     explicit ApplicationWindow(QString, int, QString, QWidget *parent = nullptr);
     ~ApplicationWindow();
     void ReadServer();
-    QTcpSocket *socket;
+    Client *client;
+    //QTcpSocket *socket;
 
     bool fileReading = false;
     int fileSize = 0;
     int receivingFileSize = -1;
+
+private slots:
 
 private:
     Ui::ApplicationWindow *ui;

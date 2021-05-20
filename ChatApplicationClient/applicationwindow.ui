@@ -85,7 +85,7 @@
     <string>Join Room</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_3">
+  <widget class="QPushButton" name="createRoomButton">
    <property name="geometry">
     <rect>
      <x>200</x>
@@ -98,7 +98,7 @@
     <string>Create A Room</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit">
+  <widget class="QLineEdit" name="roomNameTextBox">
    <property name="geometry">
     <rect>
      <x>40</x>
