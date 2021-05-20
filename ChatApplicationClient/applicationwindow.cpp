@@ -5,6 +5,7 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
     QWidget(parent),
     ui(new Ui::ApplicationWindow)
 {
+
     Client *theClient = new Client(name);
     theClient->socket = new QTcpSocket(this);
     theClient->socket->connectToHost("localhost", 2000);
@@ -59,26 +60,30 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
             qDebug() << client->receivingFileSize << endl;
             qDebug() << "Receiving a file from server..." << endl;
         }
-        else if(map.value("type") == "AllUsers"){
+        else if(map.value("type") == "allUsers"){
             ui->usersListWidget->clear();
             QList<QString> users;
             users = map.values();
             for(int i = 0; i < users.size(); i++){
-                if(users.at(i) != "AllUsers"){
+                if(users.at(i) != "allUsers"){
                     ui->usersListWidget->addItem(users.at(i));}
             }
             qDebug() << "Receiving all users from server..." << endl;
         }
-        else if(map.value("type") == "AllRooms"){
+        else if(map.value("type") == "allRooms"){
             ui->roomsListWidget->clear();
             QList<QString> rooms;
             rooms = map.values();
             for(int i = 0; i < rooms.size(); i++){
-                if(rooms.at(i) != "AllRooms"){
+                if(rooms.at(i) != "allRooms"){
                     ui->roomsListWidget->addItem(rooms.at(i));}
             }
             qDebug() << "Receiving all rooms from server..." << endl;
-
+        }
+        else if(map.value("type") == "roomUsers"){
+            RoomChat *r = client->FindRoom(map.value("roomName"));
+            qDebug() << r->roomName << endl;
+            qDebug() << "Receiving room users from server..." << endl;
         }
     });
 }
@@ -92,8 +97,10 @@ ApplicationWindow::~ApplicationWindow()
 void ApplicationWindow::on_createRoomButton_clicked()
 {
     RoomChat *room = new RoomChat(ui->roomNameTextBox->text());
+    room->clients->append(client->name);
     room->setWindowTitle(room->roomName);
-    client->rooms->append(room->roomName);
+    client->rooms->append(room);
+    room->RefreshUsers();
 
     QMap<QString, QString> createRoom;
     createRoom.insert("type", "createRoom");
@@ -101,4 +108,26 @@ void ApplicationWindow::on_createRoomButton_clicked()
     client->Send(createRoom);
 
     room->show();
+}
+
+
+void ApplicationWindow::on_joinRoomButton_clicked()
+{
+    RoomChat *room = new RoomChat(ui->roomsListWidget->currentItem()->text());
+    room->setWindowTitle(room->roomName);
+    client->rooms->append(room);
+
+    QMap<QString, QString> joinRoom;
+    joinRoom.insert("type", "joinRoom");
+    joinRoom.insert("roomName", room->roomName);
+    client->Send(joinRoom);
+
+    room->show();
+}
+
+void ApplicationWindow::on_refreshRoomsButton_clicked()
+{
+    QMap<QString, QString> refreshRooms;
+    refreshRooms.insert("type", "refreshRooms");
+    client->Send(refreshRooms);
 }

@@ -81,7 +81,7 @@ void Client::run(){
             this->name = map.value("name");
             QString u = "user";
             QMap<QString, QString> allClients;
-            allClients.insert("type", "AllUsers");
+            allClients.insert("type", "allUsers");
             for(int i = 0; i < Server::clients->size(); i++){
                 allClients.insert(u.append(QString::number(i)), Server::clients->at(i)->name);
             }
@@ -98,7 +98,7 @@ void Client::run(){
 
             QMap<QString, QString> allRooms;
             QString r = "room";
-            allRooms.insert("type", "AllRooms");
+            allRooms.insert("type", "allRooms");
             for(int i = 0; i < Server::rooms->size(); i++){
                 allRooms.insert(r.append(QString::number(i)), Server::rooms->at(i)->roomName);
             }
@@ -106,12 +106,52 @@ void Client::run(){
             Server::BroadCast(allRooms);   // Send all clients the all rooms.
 
             qDebug() << "User " << this->name << " Has Created A Room..." << endl;
+
+        }else if(map.value("type") == "refreshRooms"){
+            QMap<QString, QString> allRooms;
+            QString r = "room";
+            allRooms.insert("type", "allRooms");
+            for(int i = 0; i < Server::rooms->size(); i++){
+                allRooms.insert(r.append(QString::number(i)), Server::rooms->at(i)->roomName);
+            }
+
+            Server::Send(this, allRooms);   // Send all rooms to the client.
+
+            qDebug() << "User " << this->name << " Has Refreshed The Rooms..." << endl;
+
+        }else if(map.value("type") == "joinRoom"){
+            Room *r = FindRoom(map.value("roomName"));
+            this->rooms.append(r);
+            r->clients->append(this);
+
+            QMap<QString, QString> roomUsers;
+            QString u = "user";
+            roomUsers.insert("type", "roomUsers");
+            roomUsers.insert("roomName", r->roomName);
+
+            for(int i = 0; i < r->clients->size(); i++){
+                roomUsers.insert(u.append(QString::number(i)), r->clients->at(i)->name);
+            }
+
+            for(int i = 0; i < r->clients->size(); i++){
+                Server::Send(r->clients->at(i), roomUsers);  // Send all room users the users name.
+            }
+
+            qDebug() << "User " << this->name << " Has Joined The Room Named " << r->roomName << endl;
+
         }
-
-
     });
 
     this->exec();
+}
+
+Room* Client::FindRoom(QString roomName){
+    for(int i = 0; i < Server::rooms->size(); i++){
+        if(Server::rooms->at(i)->roomName == roomName){
+            return Server::rooms->at(i);
+        }
+    }
+    return nullptr;
 }
 
 

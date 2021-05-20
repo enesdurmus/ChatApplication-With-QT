@@ -2,7 +2,7 @@
 
 Client::Client(){
     this->name = "null";
-    this->rooms = new QList<QString>;
+    this->rooms = new QList<RoomChat*>;
     this->socket = nullptr;
     this->fileReading = false;
     this->fileSize = -1;
@@ -11,7 +11,7 @@ Client::Client(){
 
 Client::Client(QString name){
     this->name = name;
-    this->rooms = new QList<QString>;
+    this->rooms = new QList<RoomChat*>;
     this->socket = nullptr;
     this->fileReading = false;
     this->fileSize = -1;
@@ -21,4 +21,12 @@ Client::Client(QString name){
 void Client::Send(QMap<QString, QString> map){
     QDataStream sendStream(socket);
     sendStream << map;
+}
+
+RoomChat* Client::FindRoom(QString roomName){
+    for(int i = 0; i < this->rooms->size(); i++){
+        if(roomName == this->rooms->at(i)->roomName)
+            return this->rooms->at(i);
+    }
+    return nullptr;
 }

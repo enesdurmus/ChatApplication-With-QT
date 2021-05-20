@@ -24,6 +24,10 @@ private slots:
 
     void on_createRoomButton_clicked();
 
+    void on_joinRoomButton_clicked();
+
+    void on_refreshRoomsButton_clicked();
+
 private:
     Ui::ApplicationWindow *ui;
 };

@@ -15,6 +15,7 @@ class RoomChat : public QWidget
 public:
     explicit RoomChat(QString roomName, QWidget *parent = nullptr);
     ~RoomChat();
+    void RefreshUsers();
     QString roomName = "null";
     QList<QString> *clients;
 
