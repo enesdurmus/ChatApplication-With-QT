@@ -13,10 +13,10 @@ class RoomChat : public QWidget
     Q_OBJECT
 
 public:
-    explicit RoomChat(QWidget *parent = nullptr);
+    explicit RoomChat(QString roomName, QWidget *parent = nullptr);
     ~RoomChat();
     QString roomName = "null";
-    QList<Client> *clients;
+    QList<QString> *clients;
 
 private:
     Ui::RoomChat *ui;

@@ -4,15 +4,18 @@
 #include <QtDebug>
 #include <QMap>
 #include <QFile>
+
 //------------------------------------------Server------------------------------------------
 
 int Server::idCounter = 0;
 QList<Client*> *Server::clients;
+QList<Room*> *Server::rooms;
 QTcpSocket* Server::socket;
 
 Server::Server (QObject * parent) : QTcpServer(parent){
     this->socket = nullptr;
     clients = new QList<Client*>;
+    rooms = new QList<Room*>;
     connect(this, &Server::newConnection, [&]() {socket = nextPendingConnection();});
 }
 
@@ -74,20 +77,50 @@ void Client::run(){
         QMap<QString, QString> map;
         readStream >> map;
 
-        if(map.keys().at(0) == "connect"){
-            this->name = map.value("connect");
-            QString user = "user";
+        if(map.value("type") == "connect"){
+            this->name = map.value("name");
+            QString u = "user";
             QMap<QString, QString> allClients;
-            allClients.insert("type", "receiveAllUsers");
+            allClients.insert("type", "AllUsers");
             for(int i = 0; i < Server::clients->size(); i++){
-                allClients.insert(user.append(QString::number(i)), Server::clients->at(i)->name);
+                allClients.insert(u.append(QString::number(i)), Server::clients->at(i)->name);
             }
-            Server::BroadCast(allClients);
+            Server::BroadCast(allClients); // Send all clients the all client's name.
 
-            qDebug() << "User " << this->name << " Has Joined" << endl;
+            qDebug() << "User " << this->name << " Has Joined..." << endl;
+
+        }else if(map.value("type") == "createRoom"){
+            Room *room = new Room(map.value("name"));
+            room->clients->append(this);
+
+            Server::rooms->append(room);
+            this->rooms.append(room);
+
+            QMap<QString, QString> allRooms;
+            QString r = "room";
+            allRooms.insert("type", "AllRooms");
+            for(int i = 0; i < Server::rooms->size(); i++){
+                allRooms.insert(r.append(QString::number(i)), Server::rooms->at(i)->roomName);
+            }
+
+            Server::BroadCast(allRooms);   // Send all clients the all rooms.
+
+            qDebug() << "User " << this->name << " Has Created A Room..." << endl;
         }
+
+
     });
 
     this->exec();
 }
+
+
+//------------------------------------------Room------------------------------------------
+
+Room::Room(QString name){
+    this->roomName = name;
+    this->clients = new QList<Client*>;
+}
+
+
 

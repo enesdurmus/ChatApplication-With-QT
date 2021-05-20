@@ -6,7 +6,7 @@
 #include <QTcpSocket>
 
 class Client;
-class ClientListenerThread;
+class Room;
 
 class Server : public QTcpServer{
 
@@ -18,6 +18,7 @@ public:
     static void BroadCast(const QMap<QString, QString> &msg);
     static QTcpSocket *socket;
     static QList<Client*> *clients;
+    static QList<Room*> *rooms;
     static int idCounter;
 protected:
     void incomingConnection(qintptr socketDescriptor) override;
@@ -36,10 +37,18 @@ public:
     QTcpSocket *socket;
     int id;
     QString name = "null";
-    QList<QString> rooms;
+    QList<Room*> rooms;
     QList<QString> privateChats;
     void run() override;
 
+};
+
+
+class Room{
+public:
+    Room(QString);
+    QString roomName = "null";
+    QList<Client*> *clients;
 };
 
 

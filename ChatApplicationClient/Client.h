@@ -18,7 +18,7 @@ public:
     void ReadFile();
     QTcpSocket *socket;
     QString name;
-    //QList<QString> *rooms;
+    QList<QString> *rooms;
   //  QList<QString> *privateChats;
 
     bool fileReading = false;

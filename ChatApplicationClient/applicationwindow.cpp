@@ -11,7 +11,8 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
     client = theClient;
 
     QMap<QString, QString> connectMap;
-    connectMap.insert("connect", theClient->name);
+    connectMap.insert("type", "connect");
+    connectMap.insert("name", theClient->name);
     theClient->Send(connectMap);
 
     ui->setupUi(this);
@@ -20,7 +21,7 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
 
         QMap<QString, QString> map;
 
-        if(this->fileReading){
+        if(client->fileReading){
             QByteArray line = client->socket->readAll();
 
             QFile target;
@@ -36,7 +37,7 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
 
             target.close();
 
-            this->fileSize = target.size();
+            client->fileSize = target.size();
 
         }else{
             QDataStream readStream(client->socket);
@@ -45,26 +46,39 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
 
         }
 
-        if(this->fileSize == this->receivingFileSize){
-            fileReading = false;
+        if(client->fileSize == client->receivingFileSize){
+            client->fileReading = false;
             qDebug() << "File has downloaded..." << endl;
         }
 
+        // Evalute the receiving type
+
         if(map.value("type") == "file"){
-            this->fileReading = true;
-            this->receivingFileSize = map.value("size").toInt();
-            qDebug() << this->receivingFileSize << endl;
+            client->fileReading = true;
+            client->receivingFileSize = map.value("size").toInt();
+            qDebug() << client->receivingFileSize << endl;
             qDebug() << "Receiving a file from server..." << endl;
         }
-        else if(map.value("type") == "receiveAllUsers"){
+        else if(map.value("type") == "AllUsers"){
             ui->usersListWidget->clear();
-            qDebug() << map.size() << endl;
             QList<QString> users;
             users = map.values();
-            for(int i = 1; i < map.size(); i++){
-                ui->usersListWidget->addItem(users.at(i));
+            for(int i = 0; i < users.size(); i++){
+                if(users.at(i) != "AllUsers"){
+                    ui->usersListWidget->addItem(users.at(i));}
             }
             qDebug() << "Receiving all users from server..." << endl;
+        }
+        else if(map.value("type") == "AllRooms"){
+            ui->roomsListWidget->clear();
+            QList<QString> rooms;
+            rooms = map.values();
+            for(int i = 0; i < rooms.size(); i++){
+                if(rooms.at(i) != "AllRooms"){
+                    ui->roomsListWidget->addItem(rooms.at(i));}
+            }
+            qDebug() << "Receiving all rooms from server..." << endl;
+
         }
     });
 }
@@ -74,3 +88,17 @@ ApplicationWindow::~ApplicationWindow()
     delete ui;
 }
 
+
+void ApplicationWindow::on_createRoomButton_clicked()
+{
+    RoomChat *room = new RoomChat(ui->roomNameTextBox->text());
+    room->setWindowTitle(room->roomName);
+    client->rooms->append(room->roomName);
+
+    QMap<QString, QString> createRoom;
+    createRoom.insert("type", "createRoom");
+    createRoom.insert("name", room->roomName);
+    client->Send(createRoom);
+
+    room->show();
+}

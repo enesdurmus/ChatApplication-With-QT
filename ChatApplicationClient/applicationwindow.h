@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QMap>
 #include "Client.h"
+#include "roomchat.h"
 
 namespace Ui {
 class ApplicationWindow;
@@ -18,13 +19,10 @@ public:
     ~ApplicationWindow();
     void ReadServer();
     Client *client;
-    //QTcpSocket *socket;
-
-    bool fileReading = false;
-    int fileSize = 0;
-    int receivingFileSize = -1;
 
 private slots:
+
+    void on_createRoomButton_clicked();
 
 private:
     Ui::ApplicationWindow *ui;

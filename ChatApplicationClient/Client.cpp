@@ -2,7 +2,7 @@
 
 Client::Client(){
     this->name = "null";
-    //this->rooms = new QList<QString>;
+    this->rooms = new QList<QString>;
     this->socket = nullptr;
     this->fileReading = false;
     this->fileSize = -1;
@@ -11,7 +11,7 @@ Client::Client(){
 
 Client::Client(QString name){
     this->name = name;
-    //this->rooms = new QList<QString>;
+    this->rooms = new QList<QString>;
     this->socket = nullptr;
     this->fileReading = false;
     this->fileSize = -1;
