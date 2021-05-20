@@ -139,6 +139,22 @@ void Client::run(){
 
             qDebug() << "User " << this->name << " Has Joined The Room Named " << r->roomName << endl;
 
+        }else if(map.value("type") == "roomMessage"){
+            Room *r = FindRoom(map.value("roomName"));
+
+            QMap<QString, QString> msg;
+            msg.insert("type", "roomMessage");
+            msg.insert("roomName", r->roomName);
+            msg.insert("userName", this->name);
+            msg.insert("message", map.value("message"));
+
+            for(int i = 0; i < r->clients->size(); i++){
+                if(r->clients->at(i)->name != this->name)
+                    Server::Send(r->clients->at(i), msg);
+            }
+
+            qDebug() << "User " << this->name << " Has Send A Message To The Room Named " << r->roomName << endl;
+
         }
     });
 

@@ -59,8 +59,7 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
             client->receivingFileSize = map.value("size").toInt();
             qDebug() << client->receivingFileSize << endl;
             qDebug() << "Receiving a file from server..." << endl;
-        }
-        else if(map.value("type") == "allUsers"){
+        }else if(map.value("type") == "allUsers"){
             ui->usersListWidget->clear();
             QList<QString> users;
             users = map.values();
@@ -69,8 +68,7 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
                     ui->usersListWidget->addItem(users.at(i));}
             }
             qDebug() << "Receiving all users from server..." << endl;
-        }
-        else if(map.value("type") == "allRooms"){
+        }else if(map.value("type") == "allRooms"){
             ui->roomsListWidget->clear();
             QList<QString> rooms;
             rooms = map.values();
@@ -79,11 +77,26 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
                     ui->roomsListWidget->addItem(rooms.at(i));}
             }
             qDebug() << "Receiving all rooms from server..." << endl;
-        }
-        else if(map.value("type") == "roomUsers"){
+        }else if(map.value("type") == "roomUsers"){
             RoomChat *r = client->FindRoom(map.value("roomName"));
-            qDebug() << r->roomName << endl;
+            QList<QString> roomUsers;
+            roomUsers = map.values();
+
+            r->clients->clear();
+
+            for (int i = 0; i < roomUsers.size(); i++) {
+                if(roomUsers.at(i) != "roomUsers" && roomUsers.at(i) != r->roomName)
+                    r->clients->append(roomUsers.at(i));
+            }
+
+            r->RefreshUsers();
             qDebug() << "Receiving room users from server..." << endl;
+        }else if(map.value("type") == "roomMessage"){
+            RoomChat *r = client->FindRoom(map.value("roomName"));
+
+            r->ReceiveMessage(map.value("userName"), map.value("message"));
+
+            qDebug() << "Receiving room message from server..." << endl;
         }
     });
 }
@@ -96,7 +109,7 @@ ApplicationWindow::~ApplicationWindow()
 
 void ApplicationWindow::on_createRoomButton_clicked()
 {
-    RoomChat *room = new RoomChat(ui->roomNameTextBox->text());
+    RoomChat *room = new RoomChat(ui->roomNameTextBox->text(), this->client);
     room->clients->append(client->name);
     room->setWindowTitle(room->roomName);
     client->rooms->append(room);
@@ -113,7 +126,7 @@ void ApplicationWindow::on_createRoomButton_clicked()
 
 void ApplicationWindow::on_joinRoomButton_clicked()
 {
-    RoomChat *room = new RoomChat(ui->roomsListWidget->currentItem()->text());
+    RoomChat *room = new RoomChat(ui->roomsListWidget->currentItem()->text(), this->client);
     room->setWindowTitle(room->roomName);
     client->rooms->append(room);
 
