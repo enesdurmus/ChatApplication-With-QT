@@ -16,5 +16,25 @@ PrivateChat::~PrivateChat()
 }
 
 void PrivateChat::ReceiveMessage(QString msg){
-    ui->chatListWidget->addItem(this->friendClient.append("  :  ").append(msg));
+    QString n = this->friendClient;
+    ui->chatListWidget->addItem(n.append("  :  ").append(msg));
+}
+
+void PrivateChat::on_sendButton_clicked()
+{
+    QMap<QString, QString> sendMessage;
+    sendMessage.insert("type", "privateChatMessage");
+    sendMessage.insert("friendUserName" , this->friendClient);
+    sendMessage.insert("message", ui->inputTextBox->text());
+
+    QString text = this->client->name;
+    text.append("  :  ").append(ui->inputTextBox->text());
+
+    QListWidgetItem* lwi = new QListWidgetItem(text);
+    ui->chatListWidget->addItem( lwi );
+    lwi->setTextAlignment(Qt::AlignRight);
+    lwi->setForeground(Qt::green);
+    text.clear();
+
+    client->Send(sendMessage);
 }

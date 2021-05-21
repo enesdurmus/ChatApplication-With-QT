@@ -19,6 +19,7 @@ public:
     Client();
     Client(QString);
     RoomChat *FindRoom(QString roomName);
+    PrivateChat *FindPrivateChat(QString friendName);
     void Send(QMap<QString, QString>);
     QMap<QString, QString>* ReceiveFromServer();
     void ReadFile();

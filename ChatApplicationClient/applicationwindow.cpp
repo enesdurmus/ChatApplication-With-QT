@@ -106,6 +106,11 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
             privateChat->show();
 
             qDebug() << "Receiving private chat info from server..." << endl;
+        }else if(map.value("type") == "privateChatMessage"){
+            PrivateChat *p = client->FindPrivateChat(map.value("userName"));
+            p->ReceiveMessage(map.value("message"));
+
+            qDebug() << "Receiving private chat message from server..." << endl;
         }
     });
 }
@@ -161,7 +166,7 @@ void ApplicationWindow::on_privateChatButton_clicked()
 
     QMap<QString, QString> pChat;
     pChat.insert("type", "privateChatCreate");
-    pChat.insert("frindUserName", ui->usersListWidget->currentItem()->text());
+    pChat.insert("friendUserName", ui->usersListWidget->currentItem()->text());
     client->Send(pChat);
 
     privateChat->show();

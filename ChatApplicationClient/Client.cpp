@@ -32,3 +32,11 @@ RoomChat* Client::FindRoom(QString roomName){
     }
     return nullptr;
 }
+
+PrivateChat* Client::FindPrivateChat(QString friendName){
+    for(int i = 0; i < this->privateChats->size(); i++){
+        if(friendName == this->privateChats->at(i)->friendClient)
+            return this->privateChats->at(i);
+    }
+    return nullptr;
+}

@@ -35,6 +35,7 @@ void Server::Send(Client *c, const QMap<QString, QString> &msg){
    // map.insert("size", QString::number(file.size()));
     QDataStream sendStream(c->socket);
     sendStream << msg;
+    c->socket->flush();
 
    /* if(map.value("type") == "file"){
         qDebug() << "girdi" << endl;
@@ -55,6 +56,8 @@ void Server::BroadCast(const QMap<QString, QString> &msg){
 Client::Client(qintptr socketDescriptor){
     this->socketDescriptor = socketDescriptor;
     this->id = Server::idCounter++;
+    this->rooms = new QList<Room*>;
+    this->privateChats = new QList<QString>;
     this->socket = new QTcpSocket();
     if (!this->socket->setSocketDescriptor(socketDescriptor)) {
         qDebug() << "Error While Setting Socket " << this->socket->errorString() <<  endl;
@@ -92,7 +95,7 @@ void Client::run(){
             room->clients->append(this);
 
             Server::rooms->append(room);
-            this->rooms.append(room);
+            this->rooms->append(room);
 
             QMap<QString, QString> allRooms;
             QString r = "room";
@@ -119,7 +122,7 @@ void Client::run(){
 
         }else if(map.value("type") == "joinRoom"){
             Room *r = FindRoom(map.value("roomName"));
-            this->rooms.append(r);
+            this->rooms->append(r);
             r->clients->append(this);
 
             QMap<QString, QString> roomUsers;
@@ -153,14 +156,25 @@ void Client::run(){
 
             qDebug() << "User " << this->name << " Has Send A Message To The Room Named " << r->roomName << endl;
         }else if(map.value("type") == "privateChatCreate"){
+            this->privateChats->append(map.value("friendUserName"));
+            FindClient(map.value("friendUserName"))->privateChats->append(this->name);
 
             QMap<QString, QString> msg;
             msg.insert("type", "privateChatCreate");
             msg.insert("userName", this->name);
 
-            Server::Send(FindClient(map.value("frindUserName")), msg);
+            Server::Send(FindClient(map.value("friendUserName")), msg);
 
-            qDebug() << "User " << this->name << " Has Open A Private Chat with " << map.value("frindUserName") << endl;
+            qDebug() << "User " << this->name << " Has Open A Private Chat with " << map.value("friendUserName") << endl;
+        }else if(map.value("type") == "privateChatMessage"){
+
+            QMap<QString, QString> msg;
+            msg.insert("type", "privateChatMessage");
+            msg.insert("userName", this->name);
+            msg.insert("message", map.value("message"));
+            Server::Send(FindClient(map.value("friendUserName")), msg);
+
+            qDebug() << "User " << this->name << " Has Send A Meesage To " << map.value("friendUserName") << endl;
         }
     });
 

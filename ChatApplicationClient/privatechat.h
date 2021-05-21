@@ -22,6 +22,9 @@ public:
     QString friendClient;
 
 
+private slots:
+    void on_sendButton_clicked();
+
 private:
     Ui::PrivateChat *ui;
 };
