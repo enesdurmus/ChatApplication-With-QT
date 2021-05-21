@@ -14,17 +14,20 @@ SOURCES += \
     applicationwindow.cpp \
     main.cpp \
     mainwindow.cpp \
+    privatechat.cpp \
     roomchat.cpp
 
 HEADERS += \
     Client.h \
     applicationwindow.h \
     mainwindow.h \
+    privatechat.h \
     roomchat.h
 
 FORMS += \
     applicationwindow.ui \
     mainwindow.ui \
+    privatechat.ui \
     roomchat.ui
 
 # Default rules for deployment.

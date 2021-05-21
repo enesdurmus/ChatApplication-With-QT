@@ -5,6 +5,7 @@
 #include <QMap>
 #include "Client.h"
 #include "roomchat.h"
+#include "privatechat.h"
 
 namespace Ui {
 class ApplicationWindow;
@@ -27,6 +28,8 @@ private slots:
     void on_joinRoomButton_clicked();
 
     void on_refreshRoomsButton_clicked();
+
+    void on_privateChatButton_clicked();
 
 private:
     Ui::ApplicationWindow *ui;

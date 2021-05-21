@@ -59,7 +59,7 @@
     <string>Rooms</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="privateChatButton">
    <property name="geometry">
     <rect>
      <x>250</x>

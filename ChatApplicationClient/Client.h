@@ -1,7 +1,6 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-#include "roomchat.h"
 #include <QString>
 #include <QTcpSocket>
 #include <QDataStream>
@@ -9,8 +8,11 @@
 #include <QMap>
 #include <QFile>
 #include <QList>
+#include "roomchat.h"
+#include "privatechat.h"
 
 class RoomChat;
+class PrivateChat;
 
 class Client{
 public:
@@ -23,7 +25,7 @@ public:
     QTcpSocket *socket;
     QString name;
     QList<RoomChat*> *rooms;
-  //  QList<QString> *privateChats;
+    QList<PrivateChat*> *privateChats;
 
     bool fileReading = false;
     int fileSize = 0;

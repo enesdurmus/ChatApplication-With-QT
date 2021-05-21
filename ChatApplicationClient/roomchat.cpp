@@ -43,6 +43,5 @@ void RoomChat::on_sendButton_clicked()
 }
 
 void RoomChat::ReceiveMessage(QString userName, QString msg){
-    qDebug() << userName << endl;
     ui->chatListWidget->addItem(userName.append("  :  ").append(msg));
 }

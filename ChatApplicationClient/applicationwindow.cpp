@@ -97,6 +97,15 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
             r->ReceiveMessage(map.value("userName"), map.value("message"));
 
             qDebug() << "Receiving room message from server..." << endl;
+        }else if(map.value("type") == "privateChatCreate"){
+            PrivateChat *privateChat = new PrivateChat(this->client, map.value("userName"));
+            privateChat->setWindowTitle(map.value("userName"));
+
+            client->privateChats->append(privateChat);
+
+            privateChat->show();
+
+            qDebug() << "Receiving private chat info from server..." << endl;
         }
     });
 }
@@ -105,7 +114,6 @@ ApplicationWindow::~ApplicationWindow()
 {
     delete ui;
 }
-
 
 void ApplicationWindow::on_createRoomButton_clicked()
 {
@@ -122,7 +130,6 @@ void ApplicationWindow::on_createRoomButton_clicked()
 
     room->show();
 }
-
 
 void ApplicationWindow::on_joinRoomButton_clicked()
 {
@@ -143,4 +150,19 @@ void ApplicationWindow::on_refreshRoomsButton_clicked()
     QMap<QString, QString> refreshRooms;
     refreshRooms.insert("type", "refreshRooms");
     client->Send(refreshRooms);
+}
+
+void ApplicationWindow::on_privateChatButton_clicked()
+{
+    PrivateChat *privateChat = new PrivateChat(this->client, ui->usersListWidget->currentItem()->text());
+    privateChat->setWindowTitle(ui->usersListWidget->currentItem()->text());
+
+    client->privateChats->append(privateChat);
+
+    QMap<QString, QString> pChat;
+    pChat.insert("type", "privateChatCreate");
+    pChat.insert("frindUserName", ui->usersListWidget->currentItem()->text());
+    client->Send(pChat);
+
+    privateChat->show();
 }

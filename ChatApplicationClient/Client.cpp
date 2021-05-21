@@ -3,6 +3,7 @@
 Client::Client(){
     this->name = "null";
     this->rooms = new QList<RoomChat*>;
+    this->privateChats = new QList<PrivateChat*>;
     this->socket = nullptr;
     this->fileReading = false;
     this->fileSize = -1;
@@ -12,6 +13,7 @@ Client::Client(){
 Client::Client(QString name){
     this->name = name;
     this->rooms = new QList<RoomChat*>;
+    this->privateChats = new QList<PrivateChat*>;
     this->socket = nullptr;
     this->fileReading = false;
     this->fileSize = -1;

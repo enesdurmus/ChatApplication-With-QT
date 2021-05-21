@@ -25,8 +25,6 @@ void Server::incomingConnection(qintptr socketDescriptor){
 }
 
 void Server::Send(Client *c, const QMap<QString, QString> &msg){
-    qDebug() << c->socket ->socketDescriptor() << endl;
-
    /* QFile file("C:/Users/X550V/Desktop/Proje2 (2).pdf");   //file path
     file.open(QIODevice::ReadOnly);
     QByteArray q = file.readAll();
@@ -154,7 +152,15 @@ void Client::run(){
             }
 
             qDebug() << "User " << this->name << " Has Send A Message To The Room Named " << r->roomName << endl;
+        }else if(map.value("type") == "privateChatCreate"){
 
+            QMap<QString, QString> msg;
+            msg.insert("type", "privateChatCreate");
+            msg.insert("userName", this->name);
+
+            Server::Send(FindClient(map.value("frindUserName")), msg);
+
+            qDebug() << "User " << this->name << " Has Open A Private Chat with " << map.value("frindUserName") << endl;
         }
     });
 
@@ -165,6 +171,15 @@ Room* Client::FindRoom(QString roomName){
     for(int i = 0; i < Server::rooms->size(); i++){
         if(Server::rooms->at(i)->roomName == roomName){
             return Server::rooms->at(i);
+        }
+    }
+    return nullptr;
+}
+
+Client* Client::FindClient(QString clientName){
+    for(int i = 0; i < Server::clients->size(); i++){
+        if(Server::clients->at(i)->name == clientName){
+            return Server::clients->at(i);
         }
     }
     return nullptr;

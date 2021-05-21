@@ -32,6 +32,8 @@ class Client : public QThread{
 public:
     Client(qintptr socketDescriptor);
     Room* FindRoom(QString roomName);
+    Client* FindClient(QString clientName);
+
     ~Client();
     qintptr socketDescriptor;
     QTcpSocket *socket;
