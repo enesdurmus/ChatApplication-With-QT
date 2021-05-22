@@ -4,6 +4,7 @@
 #include <QTcpServer>
 #include <QThread>
 #include <QTcpSocket>
+#include <QFile>
 
 class Client;
 class Room;
@@ -14,7 +15,9 @@ class Server : public QTcpServer{
 
 public:
     explicit Server(QObject *parent = 0);
+    ~Server();
     static void Send(Client *c, const QMap<QString, QString> &msg);
+    static void SendFile(Client *c, QFile *file);
     static void BroadCast(const QMap<QString, QString> &msg);
     static QTcpSocket *socket;
     static QList<Client*> *clients;

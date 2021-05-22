@@ -5,6 +5,7 @@ PrivateChat::PrivateChat(Client *client, QString fClient, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::PrivateChat)
 {
+    this->setAttribute(Qt::WA_DeleteOnClose);
     this->client = client;
     this->friendClient = fClient;
     ui->setupUi(this);

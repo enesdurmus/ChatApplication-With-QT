@@ -5,6 +5,7 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
     QWidget(parent),
     ui(new Ui::ApplicationWindow)
 {
+    this->setAttribute(Qt::WA_DeleteOnClose);
 
     Client *theClient = new Client(name);
     theClient->socket = new QTcpSocket(this);
@@ -19,15 +20,14 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
     ui->setupUi(this);
 
     connect(client->socket, &QTcpSocket::readyRead, [&](){
-
         QMap<QString, QString> map;
 
         if(client->fileReading){
             QByteArray line = client->socket->readAll();
 
             QFile target;
-            target.setFileName("C:/Users/X550V/Desktop/aloo.pdf");
-
+            QString dir = client->fileDirectory;
+            target.setFileName(dir.append(client->fileName));
 
             if (!target.open(QIODevice::WriteOnly | QIODevice::Append)) {
                 qDebug() << "Can't open file for written";
@@ -44,22 +44,19 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
             QDataStream readStream(client->socket);
             readStream >> map;
             qDebug() << map.keys().at(1) << endl;
-
         }
 
         if(client->fileSize == client->receivingFileSize){
             client->fileReading = false;
+            client->fileSize = 0;
+            client->receivingFileSize = -1;
             qDebug() << "File has downloaded..." << endl;
         }
 
         // Evalute the receiving type
 
-        if(map.value("type") == "file"){
-            client->fileReading = true;
-            client->receivingFileSize = map.value("size").toInt();
-            qDebug() << client->receivingFileSize << endl;
-            qDebug() << "Receiving a file from server..." << endl;
-        }else if(map.value("type") == "allUsers"){
+        if(map.value("type") == "allUsers"){
+
             ui->usersListWidget->clear();
             QList<QString> users;
             users = map.values();
@@ -68,7 +65,9 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
                     ui->usersListWidget->addItem(users.at(i));}
             }
             qDebug() << "Receiving all users from server..." << endl;
+
         }else if(map.value("type") == "allRooms"){
+
             ui->roomsListWidget->clear();
             QList<QString> rooms;
             rooms = map.values();
@@ -77,7 +76,9 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
                     ui->roomsListWidget->addItem(rooms.at(i));}
             }
             qDebug() << "Receiving all rooms from server..." << endl;
+
         }else if(map.value("type") == "roomUsers"){
+
             RoomChat *r = client->FindRoom(map.value("roomName"));
             QList<QString> roomUsers;
             roomUsers = map.values();
@@ -91,13 +92,17 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
 
             r->RefreshUsers();
             qDebug() << "Receiving room users from server..." << endl;
+
         }else if(map.value("type") == "roomMessage"){
+
             RoomChat *r = client->FindRoom(map.value("roomName"));
 
             r->ReceiveMessage(map.value("userName"), map.value("message"));
 
             qDebug() << "Receiving room message from server..." << endl;
+
         }else if(map.value("type") == "privateChatCreate"){
+
             PrivateChat *privateChat = new PrivateChat(this->client, map.value("userName"));
             privateChat->setWindowTitle(map.value("userName"));
 
@@ -106,17 +111,28 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
             privateChat->show();
 
             qDebug() << "Receiving private chat info from server..." << endl;
+
         }else if(map.value("type") == "privateChatMessage"){
+
             PrivateChat *p = client->FindPrivateChat(map.value("userName"));
             p->ReceiveMessage(map.value("message"));
 
             qDebug() << "Receiving private chat message from server..." << endl;
+
+        }else if(map.value("type") == "fileInfo"){
+
+            client->fileReading = true;
+            client->receivingFileSize = map.value("fileSize").toInt();
+            qDebug() << "Receiving file info from server..." << endl;
+
         }
     });
 }
 
 ApplicationWindow::~ApplicationWindow()
 {
+    client->socket->close();
+    delete(this->client);
     delete ui;
 }
 

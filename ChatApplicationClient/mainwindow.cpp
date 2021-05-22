@@ -6,6 +6,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 
 {
+    this->setAttribute(Qt::WA_DeleteOnClose);
     ui->setupUi(this);
 }
 
@@ -18,8 +19,13 @@ MainWindow::~MainWindow()
 void MainWindow::on_connectButton_clicked()
 {
     ApplicationWindow *appW = new ApplicationWindow(ui->serverIpTextBox->text(), ui->portTextBox->value(), ui->userNameTextBox->text());
-    appW->show();
-    hide();
+    if(appW->client->socket->waitForConnected(3000)){  // if its connect to server open.
+        appW->show();
+        hide();
+    }else{  // if not show a message to user.
+        QMessageBox::critical(this, "Error", "Could Not Connect To Server");
+    }
+
 }
 
 void MainWindow::on_QuitButton_clicked()

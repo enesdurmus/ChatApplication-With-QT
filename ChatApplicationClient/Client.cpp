@@ -5,6 +5,8 @@ Client::Client(){
     this->rooms = new QList<RoomChat*>;
     this->privateChats = new QList<PrivateChat*>;
     this->socket = nullptr;
+    this->fileName = "null";
+    this->fileDirectory = "null";
     this->fileReading = false;
     this->fileSize = -1;
     this->receivingFileSize = 0;
@@ -15,9 +17,15 @@ Client::Client(QString name){
     this->rooms = new QList<RoomChat*>;
     this->privateChats = new QList<PrivateChat*>;
     this->socket = nullptr;
+    this->fileName = "null";
+    this->fileDirectory = "null";
     this->fileReading = false;
     this->fileSize = -1;
     this->receivingFileSize = 0;
+}
+
+Client::~Client(){
+    qDebug() << "gidiyorr" << endl;
 }
 
 void Client::Send(QMap<QString, QString> map){

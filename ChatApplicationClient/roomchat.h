@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include "Client.h"
+#include <QFileDialog>
 
 class Client;
 
@@ -25,6 +26,8 @@ public:
 
 private slots:
     void on_sendButton_clicked();
+
+    void on_downloadButton_clicked();
 
 private:
     Ui::RoomChat *ui;

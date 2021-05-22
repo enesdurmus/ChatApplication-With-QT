@@ -18,6 +18,7 @@ class Client{
 public:
     Client();
     Client(QString);
+    ~Client();
     RoomChat *FindRoom(QString roomName);
     PrivateChat *FindPrivateChat(QString friendName);
     void Send(QMap<QString, QString>);
@@ -28,9 +29,11 @@ public:
     QList<RoomChat*> *rooms;
     QList<PrivateChat*> *privateChats;
 
-    bool fileReading = false;
-    int fileSize = 0;
-    int receivingFileSize = -1;
+    QString fileDirectory;
+    QString fileName;
+    bool fileReading;
+    int fileSize;
+    int receivingFileSize;
 };
 
 #endif // CLIENT_H

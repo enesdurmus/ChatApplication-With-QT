@@ -45,3 +45,18 @@ void RoomChat::on_sendButton_clicked()
 void RoomChat::ReceiveMessage(QString userName, QString msg){
     ui->chatListWidget->addItem(userName.append("  :  ").append(msg));
 }
+
+void RoomChat::on_downloadButton_clicked()
+{
+    client->fileDirectory = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
+                                                    "/home",
+                                                    QFileDialog::ShowDirsOnly
+                                                    | QFileDialog::DontResolveSymlinks);
+    client->fileDirectory.append("/");
+    client->fileName = "amkk.pdf";
+
+    QMap<QString, QString> msg;
+    msg.insert("type", "downloadFile");
+    msg.insert("fileName", "Proje2.pdf");
+    client->Send(msg);
+}

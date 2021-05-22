@@ -3,7 +3,6 @@
 #include <QDataStream>
 #include <QtDebug>
 #include <QMap>
-#include <QFile>
 
 //------------------------------------------Server------------------------------------------
 
@@ -14,9 +13,14 @@ QTcpSocket* Server::socket;
 
 Server::Server (QObject * parent) : QTcpServer(parent){
     this->socket = nullptr;
-    clients = new QList<Client*>;
-    rooms = new QList<Room*>;
+    this->clients = new QList<Client*>;
+    this->rooms = new QList<Room*>;
     connect(this, &Server::newConnection, [&]() {socket = nextPendingConnection();});
+}
+
+Server::~Server(){
+    this->socket->close();
+    delete(this);
 }
 
 void Server::incomingConnection(qintptr socketDescriptor){
@@ -25,22 +29,15 @@ void Server::incomingConnection(qintptr socketDescriptor){
 }
 
 void Server::Send(Client *c, const QMap<QString, QString> &msg){
-   /* QFile file("C:/Users/X550V/Desktop/Proje2 (2).pdf");   //file path
-    file.open(QIODevice::ReadOnly);
-    QByteArray q = file.readAll();
-    qDebug() << q.size() << endl;
-*/
-
-   // map.insert("type", "file");
-   // map.insert("size", QString::number(file.size()));
     QDataStream sendStream(c->socket);
     sendStream << msg;
     c->socket->flush();
+}
 
-   /* if(map.value("type") == "file"){
-        qDebug() << "girdi" << endl;
-        c->socket->write(q);
-    }*/
+void Server::SendFile(Client *c, QFile *file){
+    QByteArray q = file->readAll();
+    qDebug() << q.size() << endl;
+    c->socket->write(q);
 }
 
 void Server::BroadCast(const QMap<QString, QString> &msg){
@@ -79,6 +76,7 @@ void Client::run(){
         readStream >> map;
 
         if(map.value("type") == "connect"){
+
             this->name = map.value("name");
             QString u = "user";
             QMap<QString, QString> allClients;
@@ -91,6 +89,7 @@ void Client::run(){
             qDebug() << "User " << this->name << " Has Joined..." << endl;
 
         }else if(map.value("type") == "createRoom"){
+
             Room *room = new Room(map.value("name"));
             room->clients->append(this);
 
@@ -109,6 +108,7 @@ void Client::run(){
             qDebug() << "User " << this->name << " Has Created A Room..." << endl;
 
         }else if(map.value("type") == "refreshRooms"){
+
             QMap<QString, QString> allRooms;
             QString r = "room";
             allRooms.insert("type", "allRooms");
@@ -121,6 +121,7 @@ void Client::run(){
             qDebug() << "User " << this->name << " Has Refreshed The Rooms..." << endl;
 
         }else if(map.value("type") == "joinRoom"){
+
             Room *r = FindRoom(map.value("roomName"));
             this->rooms->append(r);
             r->clients->append(this);
@@ -141,6 +142,7 @@ void Client::run(){
             qDebug() << "User " << this->name << " Has Joined The Room Named " << r->roomName << endl;
 
         }else if(map.value("type") == "roomMessage"){
+
             Room *r = FindRoom(map.value("roomName"));
 
             QMap<QString, QString> msg;
@@ -155,7 +157,9 @@ void Client::run(){
             }
 
             qDebug() << "User " << this->name << " Has Send A Message To The Room Named " << r->roomName << endl;
+
         }else if(map.value("type") == "privateChatCreate"){
+
             this->privateChats->append(map.value("friendUserName"));
             FindClient(map.value("friendUserName"))->privateChats->append(this->name);
 
@@ -166,6 +170,7 @@ void Client::run(){
             Server::Send(FindClient(map.value("friendUserName")), msg);
 
             qDebug() << "User " << this->name << " Has Open A Private Chat with " << map.value("friendUserName") << endl;
+
         }else if(map.value("type") == "privateChatMessage"){
 
             QMap<QString, QString> msg;
@@ -175,6 +180,24 @@ void Client::run(){
             Server::Send(FindClient(map.value("friendUserName")), msg);
 
             qDebug() << "User " << this->name << " Has Send A Meesage To " << map.value("friendUserName") << endl;
+
+        }else if(map.value("type") == "downloadFile"){
+
+            QFile file("downloadFiles/" + map.value("fileName"));
+            file.open(QIODevice::ReadOnly);
+
+            QMap<QString, QString> fileInfo;
+            fileInfo.insert("type", "fileInfo");
+            fileInfo.insert("fileSize", QString::number(file.size()));
+
+            Server::Send(this, fileInfo);
+
+            this->socket->waitForBytesWritten(2000);
+
+            Server::SendFile(this, &file);
+
+            qDebug() << file.size() << endl;
+
         }
     });
 
