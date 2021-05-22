@@ -43,7 +43,6 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
         }else{
             QDataStream readStream(client->socket);
             readStream >> map;
-            qDebug() << map.keys().at(1) << endl;
         }
 
         if(client->fileSize == client->receivingFileSize){
@@ -124,6 +123,16 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
             client->fileReading = true;
             client->receivingFileSize = map.value("fileSize").toInt();
             qDebug() << "Receiving file info from server..." << endl;
+
+        }else if(map.value("type") == "fileMessage"){
+            RoomChat *r = client->FindRoom(map.value("roomName"));
+            if(map.value("userName") != client->name){
+                r->ReceiveMessage(map.value("userName"), map.value("fileName"));
+            }else{
+                r->ReceiveMessageFile(map.value("userName"), map.value("fileName"));
+            }
+
+            qDebug() << "Receiving room file message from server..." << endl;
 
         }
     });

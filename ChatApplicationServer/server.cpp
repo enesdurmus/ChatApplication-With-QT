@@ -36,7 +36,6 @@ void Server::Send(Client *c, const QMap<QString, QString> &msg){
 
 void Server::SendFile(Client *c, QFile *file){
     QByteArray q = file->readAll();
-    qDebug() << q.size() << endl;
     c->socket->write(q);
 }
 
@@ -56,6 +55,12 @@ Client::Client(qintptr socketDescriptor){
     this->rooms = new QList<Room*>;
     this->privateChats = new QList<QString>;
     this->socket = new QTcpSocket();
+    this->fileName = "null";
+    this->fileClientName = "null";
+    this->fileRoomName = "null";
+    this->fileReading = false;
+    this->fileSize = -1;
+    this->receivingFileSize = 0;
     if (!this->socket->setSocketDescriptor(socketDescriptor)) {
         qDebug() << "Error While Setting Socket " << this->socket->errorString() <<  endl;
         return;
@@ -71,9 +76,53 @@ Client::~Client(){
 
 void Client::run(){
     connect(socket, &QTcpSocket::readyRead, [&](){
-        QDataStream readStream(socket);
+
         QMap<QString, QString> map;
-        readStream >> map;
+
+        if(this->fileReading){
+            QByteArray line = socket->readAll();
+
+            QFile target;
+            QString dir = "downloadFiles/";
+            target.setFileName(dir.append(this->fileName));
+
+            if (!target.open(QIODevice::WriteOnly | QIODevice::Append)) {
+                qDebug() << "Can't open file for written";
+                return;
+            }
+
+            target.write(line);
+
+            target.close();
+
+            this->fileSize = target.size();
+
+        }else{
+            QDataStream readStream(socket);
+            readStream >> map;
+        }
+
+        if(this->fileSize == this->receivingFileSize){
+
+            this->fileReading = false;
+            this->fileSize = 0;
+            this->receivingFileSize = -1;
+
+            Room *r = FindRoom(fileRoomName);
+            QString str = "File->";
+
+            QMap<QString, QString> fileMessage;
+            fileMessage.insert("type", "fileMessage");
+            fileMessage.insert("roomName", fileRoomName);
+            fileMessage.insert("fileName", str.append(fileName));
+            fileMessage.insert("userName", this->name);
+
+            for(int i = 0; i < r->clients->size(); i++){
+                Server::Send(r->clients->at(i), fileMessage);  // Send all room users the file message.
+            }
+
+            qDebug() << "File has downloaded..." << endl;
+        }
 
         if(map.value("type") == "connect"){
 
@@ -192,11 +241,20 @@ void Client::run(){
 
             Server::Send(this, fileInfo);
 
-            this->socket->waitForBytesWritten(2000);
+            this->socket->waitForBytesWritten();
 
             Server::SendFile(this, &file);
 
-            qDebug() << file.size() << endl;
+            qDebug() << "File " << map.value("fileName") << " Has Sent To User " << name << endl;
+
+        }else if(map.value("type") == "uploadFileRoom"){
+
+            this->fileName = map.value("fileName");
+            this->fileReading = true;
+            this->receivingFileSize = map.value("fileSize").toInt();
+            this->fileRoomName = map.value("roomName");
+
+            qDebug() << "User " << this->name << " Has Upload A File " << endl;
 
         }
     });

@@ -31,6 +31,14 @@ Client::~Client(){
 void Client::Send(QMap<QString, QString> map){
     QDataStream sendStream(socket);
     sendStream << map;
+    this->socket->flush();
+}
+
+void Client::SendFile(QFile *file){
+    QByteArray q = file->readAll();
+    qDebug() << q.size() << endl;
+    this->socket->write(q);
+    this->socket->flush();
 }
 
 RoomChat* Client::FindRoom(QString roomName){

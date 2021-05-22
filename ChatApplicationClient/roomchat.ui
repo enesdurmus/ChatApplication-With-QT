@@ -69,6 +69,19 @@
     <string>PushButton</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="sendFileButton">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>320</y>
+     <width>93</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

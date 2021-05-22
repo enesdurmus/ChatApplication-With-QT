@@ -23,6 +23,7 @@ public:
     static QList<Client*> *clients;
     static QList<Room*> *rooms;
     static int idCounter;
+    static QString fileDirectory;
 protected:
     void incomingConnection(qintptr socketDescriptor) override;
 
@@ -44,6 +45,13 @@ public:
     QString name = "null";
     QList<Room*> *rooms;
     QList<QString> *privateChats;
+    QString fileName;
+    QString fileRoomName;
+    QString fileClientName;
+    bool fileReading;
+    int fileSize;
+    int receivingFileSize;
+
     void run() override;
 
 };

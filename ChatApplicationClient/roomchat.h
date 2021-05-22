@@ -4,6 +4,7 @@
 #include <QWidget>
 #include "Client.h"
 #include <QFileDialog>
+#include <QMessageBox>
 
 class Client;
 
@@ -20,6 +21,7 @@ public:
     ~RoomChat();
     void RefreshUsers();
     void ReceiveMessage(QString, QString);
+    void ReceiveMessageFile(QString, QString);
     QString roomName = "null";
     Client *client;
     QList<QString> *clients;
@@ -28,6 +30,8 @@ private slots:
     void on_sendButton_clicked();
 
     void on_downloadButton_clicked();
+
+    void on_sendFileButton_clicked();
 
 private:
     Ui::RoomChat *ui;

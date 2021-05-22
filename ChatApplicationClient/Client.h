@@ -22,6 +22,7 @@ public:
     RoomChat *FindRoom(QString roomName);
     PrivateChat *FindPrivateChat(QString friendName);
     void Send(QMap<QString, QString>);
+    void SendFile(QFile*);
     QMap<QString, QString>* ReceiveFromServer();
     void ReadFile();
     QTcpSocket *socket;

@@ -25,7 +25,6 @@ void MainWindow::on_connectButton_clicked()
     }else{  // if not show a message to user.
         QMessageBox::critical(this, "Error", "Could Not Connect To Server");
     }
-
 }
 
 void MainWindow::on_QuitButton_clicked()
