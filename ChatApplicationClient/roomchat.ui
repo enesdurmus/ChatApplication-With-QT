@@ -66,10 +66,10 @@
     </rect>
    </property>
    <property name="text">
-    <string>PushButton</string>
+    <string>Download File</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="sendFileButton">
+  <widget class="QPushButton" name="uploadFileButton">
    <property name="geometry">
     <rect>
      <x>140</x>
@@ -79,7 +79,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>PushButton</string>
+    <string>Upload File</string>
    </property>
   </widget>
  </widget>

@@ -47,7 +47,7 @@ public:
     QList<QString> *privateChats;
     QString fileName;
     QString fileRoomName;
-    QString fileClientName;
+    QString fileFriendUserName;
     bool fileReading;
     int fileSize;
     int receivingFileSize;

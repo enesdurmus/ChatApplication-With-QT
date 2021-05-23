@@ -25,6 +25,10 @@ public:
 private slots:
     void on_sendButton_clicked();
 
+    void on_uploadFileButton_clicked();
+
+    void on_downloadFileButton_clicked();
+
 private:
     Ui::PrivateChat *ui;
 };

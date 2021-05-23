@@ -45,16 +45,6 @@ void RoomChat::on_sendButton_clicked()
 void RoomChat::ReceiveMessage(QString userName, QString msg){
     ui->chatListWidget->addItem(userName.append("  :  ").append(msg));
 }
-void RoomChat::ReceiveMessageFile(QString userName, QString msg){
-    QString text = userName;
-    text.append("  :  ").append(msg);
-
-    QListWidgetItem* lwi = new QListWidgetItem(text);
-    ui->chatListWidget->addItem( lwi );
-    lwi->setTextAlignment(Qt::AlignRight);
-    lwi->setForeground(Qt::green);
-    text.clear();
-}
 
 void RoomChat::on_downloadButton_clicked()
 {
@@ -72,7 +62,7 @@ void RoomChat::on_downloadButton_clicked()
     client->Send(msg);
 }
 
-void RoomChat::on_sendFileButton_clicked()
+void RoomChat::on_uploadFileButton_clicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this,tr("Select File"), "/home", tr("Files (*.png *.xpm *.jpg *.txt *.xml *.pdf)"));
     QFile file(fileName);
@@ -91,6 +81,15 @@ void RoomChat::on_sendFileButton_clicked()
         client->SendFile(&file);
 
         client->socket->waitForBytesWritten();
+
+        QString text = client->name;
+        text.append("  :   File->").append(fileName.split("/").at(fileName.split("/").size() - 1));
+
+        QListWidgetItem* lwi = new QListWidgetItem(text);
+        ui->chatListWidget->addItem( lwi );
+        lwi->setTextAlignment(Qt::AlignRight);
+        lwi->setForeground(Qt::green);
+        text.clear();
 
     }else{
         QMessageBox::critical(this, "Error", "Could Not Open The File");

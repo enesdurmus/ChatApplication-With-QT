@@ -124,17 +124,26 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
             client->receivingFileSize = map.value("fileSize").toInt();
             qDebug() << "Receiving file info from server..." << endl;
 
-        }else if(map.value("type") == "fileMessage"){
+        }else if(map.value("type") == "fileMessageRoom"){
+
             RoomChat *r = client->FindRoom(map.value("roomName"));
-            if(map.value("userName") != client->name){
-                r->ReceiveMessage(map.value("userName"), map.value("fileName"));
-            }else{
-                r->ReceiveMessageFile(map.value("userName"), map.value("fileName"));
-            }
+            //if(map.value("userName") != client->name){
+            r->ReceiveMessage(map.value("userName"), map.value("fileName"));
+            //}else{
+            //     r->ReceiveMessageFile(map.value("userName"), map.value("fileName"));
+            // }
 
             qDebug() << "Receiving room file message from server..." << endl;
 
+        }else if(map.value("type") == "fileMessagePrivateChat"){
+
+            PrivateChat *pc = client->FindPrivateChat(map.value("userName"));  //For receiver
+            pc->ReceiveMessage(map.value("fileName"));
+
+            qDebug() << "Receiving private chat file message from server..." << endl;
+
         }
+
     });
 }
 

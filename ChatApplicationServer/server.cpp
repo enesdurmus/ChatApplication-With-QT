@@ -56,7 +56,7 @@ Client::Client(qintptr socketDescriptor){
     this->privateChats = new QList<QString>;
     this->socket = new QTcpSocket();
     this->fileName = "null";
-    this->fileClientName = "null";
+    this->fileFriendUserName = "null";
     this->fileRoomName = "null";
     this->fileReading = false;
     this->fileSize = -1;
@@ -104,22 +104,39 @@ void Client::run(){
 
         if(this->fileSize == this->receivingFileSize){
 
+            if(this->fileRoomName != "null"){
+                Room *r = FindRoom(fileRoomName);
+                QString str = "File->";
+
+                QMap<QString, QString> fileMessage;
+                fileMessage.insert("type", "fileMessageRoom");
+                fileMessage.insert("roomName", fileRoomName);
+                fileMessage.insert("fileName", str.append(fileName));
+                fileMessage.insert("userName", this->name);
+
+                for(int i = 0; i < r->clients->size(); i++){
+                    if(r->clients->at(i)->name != name)
+                        Server::Send(r->clients->at(i), fileMessage);  // Send all room users the file message.
+                }
+
+            }else{
+
+                Client *c = FindClient(this->fileFriendUserName);
+                QString str = "File->";
+
+                QMap<QString, QString> fileMessage;
+                fileMessage.insert("type", "fileMessagePrivateChat");
+                fileMessage.insert("fileName", str.append(fileName));
+                fileMessage.insert("userName", this->name);
+                fileMessage.insert("friendUserName", fileFriendUserName);
+                Server::Send(c, fileMessage);
+
+            }
+            this->fileRoomName = "null";
+            this->fileFriendUserName = "null";
             this->fileReading = false;
             this->fileSize = 0;
             this->receivingFileSize = -1;
-
-            Room *r = FindRoom(fileRoomName);
-            QString str = "File->";
-
-            QMap<QString, QString> fileMessage;
-            fileMessage.insert("type", "fileMessage");
-            fileMessage.insert("roomName", fileRoomName);
-            fileMessage.insert("fileName", str.append(fileName));
-            fileMessage.insert("userName", this->name);
-
-            for(int i = 0; i < r->clients->size(); i++){
-                Server::Send(r->clients->at(i), fileMessage);  // Send all room users the file message.
-            }
 
             qDebug() << "File has downloaded..." << endl;
         }
@@ -253,6 +270,15 @@ void Client::run(){
             this->fileReading = true;
             this->receivingFileSize = map.value("fileSize").toInt();
             this->fileRoomName = map.value("roomName");
+
+            qDebug() << "User " << this->name << " Has Upload A File " << endl;
+
+        }else if(map.value("type") == "uploadFilePrivateChat"){
+
+            this->fileName = map.value("fileName");
+            this->fileReading = true;
+            this->receivingFileSize = map.value("fileSize").toInt();
+            this->fileFriendUserName = map.value("friendClientName");
 
             qDebug() << "User " << this->name << " Has Upload A File " << endl;
 

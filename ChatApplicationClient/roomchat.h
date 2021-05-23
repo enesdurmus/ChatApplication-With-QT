@@ -21,7 +21,6 @@ public:
     ~RoomChat();
     void RefreshUsers();
     void ReceiveMessage(QString, QString);
-    void ReceiveMessageFile(QString, QString);
     QString roomName = "null";
     Client *client;
     QList<QString> *clients;
@@ -31,7 +30,7 @@ private slots:
 
     void on_downloadButton_clicked();
 
-    void on_sendFileButton_clicked();
+    void on_uploadFileButton_clicked();
 
 private:
     Ui::RoomChat *ui;
