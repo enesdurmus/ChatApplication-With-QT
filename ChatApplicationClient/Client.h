@@ -26,6 +26,7 @@ public:
     QMap<QString, QString>* ReceiveFromServer();
     void ReadFile();
     QTcpSocket *socket;
+    bool isUserNameUnique;
     QString name;
     QList<RoomChat*> *rooms;
     QList<PrivateChat*> *privateChats;

@@ -63,7 +63,13 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
                 if(users.at(i) != "allUsers"){
                     ui->usersListWidget->addItem(users.at(i));}
             }
+            client->isUserNameUnique = true;
             qDebug() << "Receiving all users from server..." << endl;
+
+        }else if(map.value("type") == "userNameTaken"){
+
+            client->isUserNameUnique = false;
+            qDebug() << "User name has taken..." << endl;
 
         }else if(map.value("type") == "allRooms"){
 
@@ -81,7 +87,6 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
             RoomChat *r = client->FindRoom(map.value("roomName"));
             QList<QString> roomUsers;
             roomUsers = map.values();
-
             r->clients->clear();
 
             for (int i = 0; i < roomUsers.size(); i++) {
@@ -95,7 +100,6 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
         }else if(map.value("type") == "roomMessage"){
 
             RoomChat *r = client->FindRoom(map.value("roomName"));
-
             r->ReceiveMessage(map.value("userName"), map.value("message"));
 
             qDebug() << "Receiving room message from server..." << endl;
@@ -149,9 +153,12 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
 
 ApplicationWindow::~ApplicationWindow()
 {
-    client->socket->close();
-    delete(this->client);
+    QMap<QString, QString> disconnectMessage;
+    disconnectMessage.insert("type", "disconnect");
+    client->Send(disconnectMessage);
+    delete client;
     delete ui;
+    qDebug() << "Application window deleted..." << endl;
 }
 
 void ApplicationWindow::on_createRoomButton_clicked()

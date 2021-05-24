@@ -19,8 +19,12 @@ Server::Server (QObject * parent) : QTcpServer(parent){
 }
 
 Server::~Server(){
-    this->socket->close();
-    delete(this);
+
+    this->close();
+    delete socket;
+    delete clients;
+    delete rooms;
+
 }
 
 void Server::incomingConnection(qintptr socketDescriptor){
@@ -47,6 +51,14 @@ void Server::BroadCast(const QMap<QString, QString> &msg){
     qDebug() << "Server sends message all clients..." << endl;
 }
 
+bool Server::CheckUserName(QString userName){
+    for(int i = 0; i < clients->size(); i++){
+        if(userName == clients->at(i)->name)
+            return false;
+    }
+    return true;
+}
+
 //------------------------------------------Client------------------------------------------
 
 Client::Client(qintptr socketDescriptor){
@@ -71,6 +83,11 @@ Client::Client(qintptr socketDescriptor){
 }
 
 Client::~Client(){
+    delete rooms;
+    delete privateChats;
+    socket->close();
+    delete socket;
+    qDebug() << "siilyormu " << endl;
     this->destroyed();
 }
 
@@ -143,16 +160,48 @@ void Client::run(){
 
         if(map.value("type") == "connect"){
 
-            this->name = map.value("name");
+            if(Server::CheckUserName(map.value("name"))){
+                this->name = map.value("name");
+                QString u = "user";
+                QMap<QString, QString> allClients;
+                allClients.insert("type", "allUsers");
+                for(int i = 0; i < Server::clients->size(); i++){
+                    allClients.insert(u.append(QString::number(i)), Server::clients->at(i)->name);
+                }
+                Server::BroadCast(allClients); // Send all clients the all client's name.
+
+                qDebug() << "User " << this->name << " Has Joined..." << endl;
+
+            }else{
+
+                QMap<QString, QString> userNameTaken;
+                userNameTaken.insert("type", "userNameTaken");
+                Server::clients->removeLast();
+                Server::Send(this, userNameTaken);
+
+                qDebug() << "User name has taken." << Server::clients->size() << endl;
+                this->wait(1000);   // wait for thread executions.
+                this->exit();  // Destroy thread
+                this->~Client();  // Destruct client
+            }
+
+        }else if(map.value("type") == "disconnect"){
+
+            qDebug() << "User " << name << " has disconnected..." << endl;
+
+            Server::clients->removeOne(this);
+
             QString u = "user";
             QMap<QString, QString> allClients;
-            allClients.insert("type", "allUsers");
+            allClients.insert("type", "allUsers"); // Send users new list because a user has disconnect.
             for(int i = 0; i < Server::clients->size(); i++){
                 allClients.insert(u.append(QString::number(i)), Server::clients->at(i)->name);
             }
             Server::BroadCast(allClients); // Send all clients the all client's name.
 
-            qDebug() << "User " << this->name << " Has Joined..." << endl;
+            this->wait(3000);   // wait for thread executions.
+            this->exit();  // Destroy thread
+            this->~Client();  // Destruct client
 
         }else if(map.value("type") == "createRoom"){
 
@@ -314,5 +363,8 @@ Room::Room(QString name){
     this->clients = new QList<Client*>;
 }
 
+Room::~Room(){
+    delete clients;
+}
 
 

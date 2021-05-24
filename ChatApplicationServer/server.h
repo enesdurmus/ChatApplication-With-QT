@@ -19,6 +19,7 @@ public:
     static void Send(Client *c, const QMap<QString, QString> &msg);
     static void SendFile(Client *c, QFile *file);
     static void BroadCast(const QMap<QString, QString> &msg);
+    static bool CheckUserName(QString);
     static QTcpSocket *socket;
     static QList<Client*> *clients;
     static QList<Room*> *rooms;
@@ -60,6 +61,7 @@ public:
 class Room{
 public:
     Room(QString);
+    ~Room();
     QString roomName = "null";
     QList<Client*> *clients;
 };
