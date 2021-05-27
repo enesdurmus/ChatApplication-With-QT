@@ -5,6 +5,7 @@ RoomChat::RoomChat(QString roomName, Client *c, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::RoomChat)
 {
+    this->setAttribute(Qt::WA_DeleteOnClose);
     this->roomName = roomName;
     this->client = c;
     this->clients = new QList<QString>;
@@ -13,7 +14,15 @@ RoomChat::RoomChat(QString roomName, Client *c, QWidget *parent) :
 
 RoomChat::~RoomChat()
 {
+    client->DisconnectRoom(this);
+    QMap<QString, QString> disconnectMessage;
+    disconnectMessage.insert("type", "disconnectRoom");
+    disconnectMessage.insert("roomName", roomName);
+    client->Send(disconnectMessage);
+    client->socket->waitForBytesWritten(2000);
     delete ui;
+    delete clients;
+    qDebug() << "Deleting room..." << endl;
 }
 
 void RoomChat::RefreshUsers(){
@@ -48,18 +57,22 @@ void RoomChat::ReceiveMessage(QString userName, QString msg){
 
 void RoomChat::on_downloadButton_clicked()
 {
-    client->fileDirectory = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
-                                                              "/home",
-                                                              QFileDialog::ShowDirsOnly
-                                                              | QFileDialog::DontResolveSymlinks);
-    client->fileDirectory.append("/");
-    client->fileName = ui->chatListWidget->currentItem()->text().split("->").at(1);
+    if(ui->chatListWidget->currentItem()->text().contains("File->")){
+        client->fileDirectory = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
+                                                                  "/home",
+                                                                  QFileDialog::ShowDirsOnly
+                                                                  | QFileDialog::DontResolveSymlinks);
+        client->fileDirectory.append("/");
+        client->fileName = ui->chatListWidget->currentItem()->text().split("->").at(1);
 
-    qDebug() << client->fileName << endl;
-    QMap<QString, QString> msg;
-    msg.insert("type", "downloadFile");
-    msg.insert("fileName", client->fileName);
-    client->Send(msg);
+        qDebug() << client->fileName << endl;
+        QMap<QString, QString> msg;
+        msg.insert("type", "downloadFile");
+        msg.insert("fileName", client->fileName);
+        client->Send(msg);
+    }else{
+        QMessageBox::critical(this, "Warning", "A File Should Be Selected");
+    }
 }
 
 void RoomChat::on_uploadFileButton_clicked()

@@ -27,13 +27,18 @@ Client::Client(QString name){
 }
 
 Client::~Client(){
-
+    //deleting rooms
+    for(int i = 0; i < rooms->size(); i++)
+        delete rooms->at(i);
+    delete rooms;
+    this->socket->close();
 }
 
 void Client::Send(QMap<QString, QString> map){
     QDataStream sendStream(socket);
     sendStream << map;
-    this->socket->flush();
+    this->socket->waitForBytesWritten();
+    this->socket->flush();   
 }
 
 void Client::SendFile(QFile *file){
@@ -41,6 +46,10 @@ void Client::SendFile(QFile *file){
     qDebug() << q.size() << endl;
     this->socket->write(q);
     this->socket->flush();
+}
+
+void Client::DisconnectRoom(RoomChat *room){
+    this->rooms->removeOne(room);
 }
 
 RoomChat* Client::FindRoom(QString roomName){

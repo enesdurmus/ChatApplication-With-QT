@@ -23,6 +23,7 @@ public:
     PrivateChat *FindPrivateChat(QString friendName);
     void Send(QMap<QString, QString>);
     void SendFile(QFile*);
+    void DisconnectRoom(RoomChat*);
     QMap<QString, QString>* ReceiveFromServer();
     void ReadFile();
     QTcpSocket *socket;

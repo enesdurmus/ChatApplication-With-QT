@@ -14,6 +14,12 @@ PrivateChat::PrivateChat(Client *client, QString fClient, QWidget *parent) :
 PrivateChat::~PrivateChat()
 {
     delete ui;
+   /* QMap<QString, QString> disconnectMessage;
+    disconnectMessage.insert("type", "disconnectRoom");
+    disconnectMessage.insert("roomName", roomName);
+    client->Send(disconnectMessage);
+    client->socket->waitForBytesWritten(2000);*/
+    qDebug() << "Deleting private chat..." << endl;
 }
 
 void PrivateChat::ReceiveMessage(QString msg){

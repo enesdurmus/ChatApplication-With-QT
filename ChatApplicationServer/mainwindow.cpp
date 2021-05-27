@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete server;
 }
 
 void MainWindow::on_startServerButton_clicked()

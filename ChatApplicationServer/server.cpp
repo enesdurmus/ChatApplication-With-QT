@@ -35,12 +35,15 @@ void Server::incomingConnection(qintptr socketDescriptor){
 void Server::Send(Client *c, const QMap<QString, QString> &msg){
     QDataStream sendStream(c->socket);
     sendStream << msg;
+    c->socket->waitForBytesWritten();
     c->socket->flush();
 }
 
 void Server::SendFile(Client *c, QFile *file){
     QByteArray q = file->readAll();
+    c->socket->waitForBytesWritten();
     c->socket->write(q);
+    c->socket->flush();
 }
 
 void Server::BroadCast(const QMap<QString, QString> &msg){
@@ -187,8 +190,6 @@ void Client::run(){
 
         }else if(map.value("type") == "disconnect"){
 
-            qDebug() << "User " << name << " has disconnected..." << endl;
-
             Server::clients->removeOne(this);
 
             QString u = "user";
@@ -199,9 +200,31 @@ void Client::run(){
             }
             Server::BroadCast(allClients); // Send all clients the all client's name.
 
-            this->wait(3000);   // wait for thread executions.
+            this->wait(1000);   // wait for thread executions.
             this->exit();  // Destroy thread
             this->~Client();  // Destruct client
+            qDebug() << "User " << name << " has disconnected..." << endl;
+
+        }else if(map.value("type") == "disconnectRoom"){
+
+            Room *r = FindRoom(map.value("roomName"));
+            this->rooms->removeOne(r);
+            r->clients->removeOne(this);
+
+            QMap<QString, QString> roomUsers;
+            QString u = "user";
+            roomUsers.insert("type", "roomUsers");
+            roomUsers.insert("roomName", r->roomName);
+
+            for(int i = 0; i < r->clients->size(); i++){
+                roomUsers.insert(u.append(QString::number(i)), r->clients->at(i)->name);
+            }
+
+            for(int i = 0; i < r->clients->size(); i++){
+                Server::Send(r->clients->at(i), roomUsers);  // Send all room users the users name.
+            }
+
+            qDebug() << "User " << name << " has disconnected room named " << map.value("roomName") << endl;
 
         }else if(map.value("type") == "createRoom"){
 

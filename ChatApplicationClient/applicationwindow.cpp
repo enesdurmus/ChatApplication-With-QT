@@ -163,32 +163,53 @@ ApplicationWindow::~ApplicationWindow()
 
 void ApplicationWindow::on_createRoomButton_clicked()
 {
-    RoomChat *room = new RoomChat(ui->roomNameTextBox->text(), this->client);
-    room->clients->append(client->name);
-    room->setWindowTitle(room->roomName);
-    client->rooms->append(room);
-    room->RefreshUsers();
+    bool canCreate = true;
 
-    QMap<QString, QString> createRoom;
-    createRoom.insert("type", "createRoom");
-    createRoom.insert("name", room->roomName);
-    client->Send(createRoom);
+    for(int i = 0; i < ui->roomsListWidget->count(); i++){
+        if(ui->roomNameTextBox->text() == ui->roomsListWidget->takeItem(i)->text())
+            canCreate = false;
+    }
+    if(canCreate){
+        RoomChat *room = new RoomChat(ui->roomNameTextBox->text(), this->client);
 
-    room->show();
+        room->clients->append(client->name);
+        room->setWindowTitle(room->roomName);
+        client->rooms->append(room);
+        room->RefreshUsers();
+
+        QMap<QString, QString> createRoom;
+        createRoom.insert("type", "createRoom");
+        createRoom.insert("name", room->roomName);
+        client->Send(createRoom);
+
+        room->show();
+    }else{
+        QMessageBox::critical(this, "Warning", "This room name has already taken...");
+    }
 }
 
 void ApplicationWindow::on_joinRoomButton_clicked()
 {
-    RoomChat *room = new RoomChat(ui->roomsListWidget->currentItem()->text(), this->client);
-    room->setWindowTitle(room->roomName);
-    client->rooms->append(room);
+    bool canJoin = true;
+    for(int i = 0; i < client->rooms->size(); i++){
+        if(client->rooms->at(i)->roomName == ui->roomsListWidget->currentItem()->text())
+            canJoin = false;
+    }
 
-    QMap<QString, QString> joinRoom;
-    joinRoom.insert("type", "joinRoom");
-    joinRoom.insert("roomName", room->roomName);
-    client->Send(joinRoom);
+    if(canJoin){
+        RoomChat *room = new RoomChat(ui->roomsListWidget->currentItem()->text(), this->client);
+        room->setWindowTitle(room->roomName);
+        client->rooms->append(room);
 
-    room->show();
+        QMap<QString, QString> joinRoom;
+        joinRoom.insert("type", "joinRoom");
+        joinRoom.insert("roomName", room->roomName);
+        client->Send(joinRoom);
+
+        room->show();
+    }else{
+        QMessageBox::critical(this, "Warning", "You have already join this room...");
+    }
 }
 
 void ApplicationWindow::on_refreshRoomsButton_clicked()
