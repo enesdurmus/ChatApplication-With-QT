@@ -62,6 +62,24 @@ bool Server::CheckUserName(QString userName){
     return true;
 }
 
+Room* Server::FindRoom(QString roomName){
+    for(int i = 0; i < Server::rooms->size(); i++){
+        if(Server::rooms->at(i)->roomName == roomName){
+            return Server::rooms->at(i);
+        }
+    }
+    return nullptr;
+}
+
+Client* Server::FindClient(QString clientName){
+    for(int i = 0; i < Server::clients->size(); i++){
+        if(Server::clients->at(i)->name == clientName){
+            return Server::clients->at(i);
+        }
+    }
+    return nullptr;
+}
+
 //------------------------------------------Client------------------------------------------
 
 Client::Client(qintptr socketDescriptor){
@@ -124,8 +142,9 @@ void Client::run(){
 
         if(this->fileSize == this->receivingFileSize){
 
+            // For rooms.
             if(this->fileRoomName != "null"){
-                Room *r = FindRoom(fileRoomName);
+                Room *r = Server::FindRoom(fileRoomName);
                 QString str = "File->";
 
                 QMap<QString, QString> fileMessage;
@@ -139,9 +158,10 @@ void Client::run(){
                         Server::Send(r->clients->at(i), fileMessage);  // Send all room users the file message.
                 }
 
+             // For private chats.
             }else{
 
-                Client *c = FindClient(this->fileFriendUserName);
+                Client *c = Server::FindClient(this->fileFriendUserName);
                 QString str = "File->";
 
                 QMap<QString, QString> fileMessage;
@@ -200,14 +220,14 @@ void Client::run(){
             }
             Server::BroadCast(allClients); // Send all clients the all client's name.
 
-            this->wait(1000);   // wait for thread executions.
+            this->wait(100);   // wait for thread executions.
             this->exit();  // Destroy thread
             this->~Client();  // Destruct client
             qDebug() << "User " << name << " has disconnected..." << endl;
 
         }else if(map.value("type") == "disconnectRoom"){
 
-            Room *r = FindRoom(map.value("roomName"));
+            Room *r = Server::FindRoom(map.value("roomName"));
             this->rooms->removeOne(r);
             r->clients->removeOne(this);
 
@@ -225,6 +245,19 @@ void Client::run(){
             }
 
             qDebug() << "User " << name << " has disconnected room named " << map.value("roomName") << endl;
+
+        }else if(map.value("type") == "disconnectPrivateChat"){
+
+            Client *c = Server::FindClient(map.value("friendName"));
+            this->privateChats->removeOne(map.value("friendName"));
+            c->privateChats->removeOne(this->name);
+
+            QMap<QString, QString> disconnectInfo;
+            disconnectInfo.insert("type", "disconnectPrivateChat");
+            disconnectInfo.insert("friendName", name);
+            Server::Send(c, disconnectInfo);
+
+            qDebug() << "User " << name << " has closed the private chat named " << map.value("friendName") << endl;
 
         }else if(map.value("type") == "createRoom"){
 
@@ -260,7 +293,7 @@ void Client::run(){
 
         }else if(map.value("type") == "joinRoom"){
 
-            Room *r = FindRoom(map.value("roomName"));
+            Room *r = Server::FindRoom(map.value("roomName"));
             this->rooms->append(r);
             r->clients->append(this);
 
@@ -281,7 +314,7 @@ void Client::run(){
 
         }else if(map.value("type") == "roomMessage"){
 
-            Room *r = FindRoom(map.value("roomName"));
+            Room *r = Server::FindRoom(map.value("roomName"));
 
             QMap<QString, QString> msg;
             msg.insert("type", "roomMessage");
@@ -299,13 +332,13 @@ void Client::run(){
         }else if(map.value("type") == "privateChatCreate"){
 
             this->privateChats->append(map.value("friendUserName"));
-            FindClient(map.value("friendUserName"))->privateChats->append(this->name);
+            Server::FindClient(map.value("friendUserName"))->privateChats->append(this->name);
 
             QMap<QString, QString> msg;
             msg.insert("type", "privateChatCreate");
             msg.insert("userName", this->name);
 
-            Server::Send(FindClient(map.value("friendUserName")), msg);
+            Server::Send(Server::FindClient(map.value("friendUserName")), msg);
 
             qDebug() << "User " << this->name << " Has Open A Private Chat with " << map.value("friendUserName") << endl;
 
@@ -315,7 +348,7 @@ void Client::run(){
             msg.insert("type", "privateChatMessage");
             msg.insert("userName", this->name);
             msg.insert("message", map.value("message"));
-            Server::Send(FindClient(map.value("friendUserName")), msg);
+            Server::Send(Server::FindClient(map.value("friendUserName")), msg);
 
             qDebug() << "User " << this->name << " Has Send A Meesage To " << map.value("friendUserName") << endl;
 
@@ -342,6 +375,11 @@ void Client::run(){
             this->fileReading = true;
             this->receivingFileSize = map.value("fileSize").toInt();
             this->fileRoomName = map.value("roomName");
+            QString path = "downloadFiles/";
+            if(QFile::exists(path.append(fileName))){
+                QFile file(path);
+                file.remove();
+            }
 
             qDebug() << "User " << this->name << " Has Upload A File " << endl;
 
@@ -351,6 +389,11 @@ void Client::run(){
             this->fileReading = true;
             this->receivingFileSize = map.value("fileSize").toInt();
             this->fileFriendUserName = map.value("friendClientName");
+            QString path = "downloadFiles/";
+            if(QFile::exists(path.append(fileName))){
+                QFile file(path);
+                file.remove();
+            }
 
             qDebug() << "User " << this->name << " Has Upload A File " << endl;
 
@@ -359,25 +402,6 @@ void Client::run(){
 
     this->exec();
 }
-
-Room* Client::FindRoom(QString roomName){
-    for(int i = 0; i < Server::rooms->size(); i++){
-        if(Server::rooms->at(i)->roomName == roomName){
-            return Server::rooms->at(i);
-        }
-    }
-    return nullptr;
-}
-
-Client* Client::FindClient(QString clientName){
-    for(int i = 0; i < Server::clients->size(); i++){
-        if(Server::clients->at(i)->name == clientName){
-            return Server::clients->at(i);
-        }
-    }
-    return nullptr;
-}
-
 
 //------------------------------------------Room------------------------------------------
 

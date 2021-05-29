@@ -21,6 +21,7 @@ public:
     Client *client;
     QString friendClient;
 
+    void keyPressEvent(QKeyEvent *event) override;
 
 private slots:
     void on_sendButton_clicked();

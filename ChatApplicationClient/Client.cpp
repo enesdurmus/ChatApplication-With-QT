@@ -10,7 +10,7 @@ Client::Client(){
     this->fileDirectory = "null";
     this->fileReading = false;
     this->fileSize = -1;
-    this->receivingFileSize = 0;
+    this->actualFileSize = 0;
 }
 
 Client::Client(QString name){
@@ -23,7 +23,7 @@ Client::Client(QString name){
     this->fileDirectory = "null";
     this->fileReading = false;
     this->fileSize = -1;
-    this->receivingFileSize = 0;
+    this->actualFileSize = 0;
 }
 
 Client::~Client(){

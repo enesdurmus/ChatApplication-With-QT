@@ -25,6 +25,8 @@ public:
     Client *client;
     QList<QString> *clients;
 
+    void keyPressEvent(QKeyEvent *event) override;
+
 private slots:
     void on_sendButton_clicked();
 

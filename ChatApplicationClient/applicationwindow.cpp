@@ -9,7 +9,7 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
 
     Client *theClient = new Client(name);
     theClient->socket = new QTcpSocket(this);
-    theClient->socket->connectToHost("localhost", 2000);
+    theClient->socket->connectToHost(ip, port);
     client = theClient;
 
     QMap<QString, QString> connectMap;
@@ -39,16 +39,17 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
             target.close();
 
             client->fileSize = target.size();
+            qDebug() << "actualFileSize  " << client->actualFileSize << "fileSize " << client->fileSize << endl;
 
         }else{
             QDataStream readStream(client->socket);
             readStream >> map;
         }
 
-        if(client->fileSize == client->receivingFileSize){
+        if(client->fileSize >= client->actualFileSize){
             client->fileReading = false;
-            client->fileSize = 0;
-            client->receivingFileSize = -1;
+            client->fileSize = -1;
+            client->actualFileSize = 0;
             qDebug() << "File has downloaded..." << endl;
         }
 
@@ -70,6 +71,14 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
 
             client->isUserNameUnique = false;
             qDebug() << "User name has taken..." << endl;
+
+        }else if(map.value("type") == "disconnectPrivateChat"){
+
+            PrivateChat *pc = client->FindPrivateChat(map.value("friendName"));
+            client->privateChats->removeOne(pc);
+            pc->setAttribute(Qt::WA_DeleteOnClose, false);
+            pc->close();
+            qDebug() << "Closing private chat with " << map.value("friendName") << "..." << endl;
 
         }else if(map.value("type") == "allRooms"){
 
@@ -125,17 +134,13 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
         }else if(map.value("type") == "fileInfo"){
 
             client->fileReading = true;
-            client->receivingFileSize = map.value("fileSize").toInt();
+            client->actualFileSize = map.value("fileSize").toInt();
             qDebug() << "Receiving file info from server..." << endl;
 
         }else if(map.value("type") == "fileMessageRoom"){
 
             RoomChat *r = client->FindRoom(map.value("roomName"));
-            //if(map.value("userName") != client->name){
             r->ReceiveMessage(map.value("userName"), map.value("fileName"));
-            //}else{
-            //     r->ReceiveMessageFile(map.value("userName"), map.value("fileName"));
-            // }
 
             qDebug() << "Receiving room file message from server..." << endl;
 
@@ -221,15 +226,19 @@ void ApplicationWindow::on_refreshRoomsButton_clicked()
 
 void ApplicationWindow::on_privateChatButton_clicked()
 {
-    PrivateChat *privateChat = new PrivateChat(this->client, ui->usersListWidget->currentItem()->text());
-    privateChat->setWindowTitle(ui->usersListWidget->currentItem()->text());
+    if(ui->usersListWidget->currentItem()->text() != client->name){
+        PrivateChat *privateChat = new PrivateChat(this->client, ui->usersListWidget->currentItem()->text());
+        privateChat->setWindowTitle(ui->usersListWidget->currentItem()->text());
 
-    client->privateChats->append(privateChat);
+        client->privateChats->append(privateChat);
 
-    QMap<QString, QString> pChat;
-    pChat.insert("type", "privateChatCreate");
-    pChat.insert("friendUserName", ui->usersListWidget->currentItem()->text());
-    client->Send(pChat);
+        QMap<QString, QString> pChat;
+        pChat.insert("type", "privateChatCreate");
+        pChat.insert("friendUserName", ui->usersListWidget->currentItem()->text());
+        client->Send(pChat);
 
-    privateChat->show();
+        privateChat->show();
+    }else{
+        QMessageBox::critical(this, "Warning", "You Can't Chat With Yourself...");
+    }
 }

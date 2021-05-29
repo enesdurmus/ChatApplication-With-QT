@@ -13,44 +13,91 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(48, 56, 65);</string>
+  </property>
   <widget class="QListWidget" name="usersListWidget">
    <property name="geometry">
     <rect>
      <x>290</x>
-     <y>30</y>
-     <width>91</width>
-     <height>231</height>
+     <y>13</y>
+     <width>111</width>
+     <height>281</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(170, 0, 0);
+background-color: rgb(238, 238, 238);
+font: 75 bold 9pt &quot;Comic Sans MS&quot;;</string>
    </property>
   </widget>
   <widget class="QListWidget" name="chatListWidget">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>30</y>
+     <y>13</y>
      <width>261</width>
      <height>231</height>
     </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>16777215</height>
+    </size>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(170, 0, 0);
+background-color: rgb(238, 238, 238);
+font: 75 bold italic 9pt &quot;Comic Sans MS&quot;;</string>
+   </property>
+   <property name="alternatingRowColors">
+    <bool>true</bool>
+   </property>
+   <property name="textElideMode">
+    <enum>Qt::ElideLeft</enum>
+   </property>
+   <property name="isWrapping" stdset="0">
+    <bool>false</bool>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="QLineEdit" name="inputTextBox">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>280</y>
+     <y>253</y>
      <width>261</width>
-     <height>31</height>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(170, 0, 0);
+background-color: rgb(238, 238, 238);
+font: 75 bold 9pt &quot;Comic Sans MS&quot;;</string>
    </property>
   </widget>
   <widget class="QPushButton" name="sendButton">
    <property name="geometry">
     <rect>
      <x>290</x>
-     <y>280</y>
-     <width>93</width>
-     <height>28</height>
+     <y>310</y>
+     <width>111</width>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(170, 0, 0);
+background-color: rgb(238, 238, 238);
+font: 75 bold italic 9pt &quot;Comic Sans MS&quot;;</string>
    </property>
    <property name="text">
     <string>Send</string>
@@ -59,11 +106,16 @@
   <widget class="QPushButton" name="downloadButton">
    <property name="geometry">
     <rect>
-     <x>290</x>
-     <y>320</y>
-     <width>93</width>
-     <height>28</height>
+     <x>150</x>
+     <y>310</y>
+     <width>121</width>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(170, 0, 0);
+background-color: rgb(238, 238, 238);
+font: 75 bold italic 9pt &quot;Comic Sans MS&quot;;</string>
    </property>
    <property name="text">
     <string>Download File</string>
@@ -72,11 +124,16 @@
   <widget class="QPushButton" name="uploadFileButton">
    <property name="geometry">
     <rect>
-     <x>140</x>
-     <y>320</y>
-     <width>93</width>
-     <height>28</height>
+     <x>10</x>
+     <y>310</y>
+     <width>121</width>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(170, 0, 0);
+background-color: rgb(238, 238, 238);
+font: 75 bold italic 9pt &quot;Comic Sans MS&quot;;</string>
    </property>
    <property name="text">
     <string>Upload File</string>

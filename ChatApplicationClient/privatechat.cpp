@@ -13,12 +13,13 @@ PrivateChat::PrivateChat(Client *client, QString fClient, QWidget *parent) :
 
 PrivateChat::~PrivateChat()
 {
-    delete ui;
-   /* QMap<QString, QString> disconnectMessage;
-    disconnectMessage.insert("type", "disconnectRoom");
-    disconnectMessage.insert("roomName", roomName);
+    client->privateChats->removeOne(this);
+    QMap<QString, QString> disconnectMessage;
+    disconnectMessage.insert("type", "disconnectPrivateChat");
+    disconnectMessage.insert("friendName", friendClient);
     client->Send(disconnectMessage);
-    client->socket->waitForBytesWritten(2000);*/
+    client->socket->waitForBytesWritten(2000);
+    delete ui;
     qDebug() << "Deleting private chat..." << endl;
 }
 
@@ -40,8 +41,10 @@ void PrivateChat::on_sendButton_clicked()
     QListWidgetItem* lwi = new QListWidgetItem(text);
     ui->chatListWidget->addItem( lwi );
     lwi->setTextAlignment(Qt::AlignRight);
+    lwi->setBackgroundColor(Qt::darkRed);
     lwi->setForeground(Qt::green);
     text.clear();
+    ui->inputTextBox->clear();
 
     client->Send(sendMessage);
 }
@@ -72,6 +75,7 @@ void PrivateChat::on_uploadFileButton_clicked()
         QListWidgetItem* lwi = new QListWidgetItem(text);
         ui->chatListWidget->addItem( lwi );
         lwi->setTextAlignment(Qt::AlignRight);
+        lwi->setBackgroundColor(Qt::transparent);
         lwi->setForeground(Qt::green);
         text.clear();
 
@@ -94,4 +98,12 @@ void PrivateChat::on_downloadFileButton_clicked()
     msg.insert("type", "downloadFile");
     msg.insert("fileName", client->fileName);
     client->Send(msg);
+}
+
+void PrivateChat::keyPressEvent(QKeyEvent *event){
+    if(event->type() == QEvent::KeyPress){
+        if(event->key() == 16777220){
+            on_sendButton_clicked();
+        }
+    }
 }

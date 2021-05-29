@@ -20,6 +20,8 @@ public:
     static void SendFile(Client *c, QFile *file);
     static void BroadCast(const QMap<QString, QString> &msg);
     static bool CheckUserName(QString);
+    static Room* FindRoom(QString roomName);
+    static Client* FindClient(QString clientName);
     static QTcpSocket *socket;
     static QList<Client*> *clients;
     static QList<Room*> *rooms;
@@ -36,9 +38,6 @@ class Client : public QThread{
 
 public:
     Client(qintptr socketDescriptor);
-    Room* FindRoom(QString roomName);
-    Client* FindClient(QString clientName);
-
     ~Client();
     qintptr socketDescriptor;
     QTcpSocket *socket;

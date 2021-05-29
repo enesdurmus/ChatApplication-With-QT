@@ -45,8 +45,10 @@ void RoomChat::on_sendButton_clicked()
     QListWidgetItem* lwi = new QListWidgetItem(text);
     ui->chatListWidget->addItem( lwi );
     lwi->setTextAlignment(Qt::AlignRight);
+    lwi->setBackgroundColor(Qt::transparent);
     lwi->setForeground(Qt::green);
     text.clear();
+    ui->inputTextBox->clear();
 
     client->Send(sendMessage);
 }
@@ -57,27 +59,29 @@ void RoomChat::ReceiveMessage(QString userName, QString msg){
 
 void RoomChat::on_downloadButton_clicked()
 {
-    if(ui->chatListWidget->currentItem()->text().contains("File->")){
-        client->fileDirectory = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
-                                                                  "/home",
-                                                                  QFileDialog::ShowDirsOnly
-                                                                  | QFileDialog::DontResolveSymlinks);
-        client->fileDirectory.append("/");
-        client->fileName = ui->chatListWidget->currentItem()->text().split("->").at(1);
+    if(ui->chatListWidget->currentItem() == NULL){
+        if(ui->chatListWidget->currentItem()->text().contains("File->")){
+            client->fileDirectory = QFileDialog::getExistingDirectory(this, tr("Open Directory"), "/home",
+                                                                      QFileDialog::ShowDirsOnly
+                                                                      | QFileDialog::DontResolveSymlinks);
+            client->fileDirectory.append("/");
+            client->fileName = ui->chatListWidget->currentItem()->text().split("->").at(1);
 
-        qDebug() << client->fileName << endl;
-        QMap<QString, QString> msg;
-        msg.insert("type", "downloadFile");
-        msg.insert("fileName", client->fileName);
-        client->Send(msg);
-    }else{
+            qDebug() << client->fileName << endl;
+            QMap<QString, QString> msg;
+            msg.insert("type", "downloadFile");
+            msg.insert("fileName", client->fileName);
+            client->Send(msg);
+        }else
+            QMessageBox::critical(this, "Warning", "A File Should Be Selected");
+    }else
         QMessageBox::critical(this, "Warning", "A File Should Be Selected");
-    }
 }
 
 void RoomChat::on_uploadFileButton_clicked()
 {
-    QString fileName = QFileDialog::getOpenFileName(this,tr("Select File"), "/home", tr("Files (*.png *.xpm *.jpg *.txt *.xml *.pdf)"));
+    QString fileName = QFileDialog::getOpenFileName(this,tr("Select File"), "/home",
+                                                    tr("Files (*.png *.xpm *.jpg *.txt *.xml *.pdf)"));
     QFile file(fileName);
 
     if(file.open(QIODevice::ReadOnly)){
@@ -106,5 +110,13 @@ void RoomChat::on_uploadFileButton_clicked()
 
     }else{
         QMessageBox::critical(this, "Error", "Could Not Open The File");
+    }
+}
+
+void RoomChat::keyPressEvent(QKeyEvent *event){
+    if(event->type() == QEvent::KeyPress){
+        if(event->key() == 16777220){
+            on_sendButton_clicked();
+        }
     }
 }

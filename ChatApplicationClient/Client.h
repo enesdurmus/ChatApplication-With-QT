@@ -36,7 +36,7 @@ public:
     QString fileName;
     bool fileReading;
     int fileSize;
-    int receivingFileSize;
+    int actualFileSize;
 };
 
 #endif // CLIENT_H

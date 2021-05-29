@@ -6,67 +6,97 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>387</width>
-    <height>350</height>
+    <width>321</width>
+    <height>480</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(48, 56, 65);</string>
+  </property>
   <widget class="QListWidget" name="roomsListWidget">
    <property name="geometry">
     <rect>
-     <x>30</x>
+     <x>10</x>
      <y>50</y>
-     <width>131</width>
-     <height>171</height>
+     <width>141</width>
+     <height>231</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(170, 0, 0);
+background-color: rgb(238, 238, 238);
+font: 75 bold 9pt &quot;Comic Sans MS&quot;;</string>
    </property>
   </widget>
   <widget class="QListWidget" name="usersListWidget">
    <property name="geometry">
     <rect>
-     <x>240</x>
+     <x>170</x>
      <y>50</y>
-     <width>131</width>
-     <height>171</height>
+     <width>141</width>
+     <height>231</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(170, 0, 0);
+background-color: rgb(238, 238, 238);
+font: 75 bold 9pt &quot;Comic Sans MS&quot;;</string>
    </property>
   </widget>
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>280</x>
+     <x>170</x>
      <y>10</y>
      <width>141</width>
-     <height>21</height>
+     <height>31</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(238, 238, 238);</string>
+   </property>
    <property name="text">
-    <string>Users</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600; font-style:italic; color:#aa0000;&quot;&gt;Users&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>20</y>
-     <width>111</width>
-     <height>21</height>
+     <x>10</x>
+     <y>10</y>
+     <width>141</width>
+     <height>31</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(238, 238, 238);</string>
+   </property>
    <property name="text">
-    <string>Rooms</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600; font-style:italic; color:#aa0000;&quot;&gt;Rooms&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
   <widget class="QPushButton" name="privateChatButton">
    <property name="geometry">
     <rect>
-     <x>250</x>
-     <y>240</y>
-     <width>101</width>
-     <height>28</height>
+     <x>170</x>
+     <y>300</y>
+     <width>141</width>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(170, 0, 0);
+background-color: rgb(238, 238, 238);
+font: 75 bold italic 9pt &quot;Comic Sans MS&quot;;</string>
    </property>
    <property name="text">
     <string>Chat With User</string>
@@ -75,11 +105,16 @@
   <widget class="QPushButton" name="joinRoomButton">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>230</y>
-     <width>131</width>
-     <height>28</height>
+     <x>10</x>
+     <y>300</y>
+     <width>141</width>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(170, 0, 0);
+background-color: rgb(238, 238, 238);
+font: 75 bold italic 9pt &quot;Comic Sans MS&quot;;</string>
    </property>
    <property name="text">
     <string>Join Room</string>
@@ -88,11 +123,16 @@
   <widget class="QPushButton" name="createRoomButton">
    <property name="geometry">
     <rect>
-     <x>210</x>
-     <y>310</y>
-     <width>101</width>
-     <height>28</height>
+     <x>180</x>
+     <y>410</y>
+     <width>121</width>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(170, 0, 0);
+background-color: rgb(238, 238, 238);
+font: 75 bold italic 9pt &quot;Comic Sans MS&quot;;</string>
    </property>
    <property name="text">
     <string>Create A Room</string>
@@ -101,21 +141,31 @@
   <widget class="QLineEdit" name="roomNameTextBox">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>310</y>
+     <x>10</x>
+     <y>410</y>
      <width>151</width>
-     <height>31</height>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(170, 0, 0);
+background-color: rgb(238, 238, 238);
+font: 75 bold 9pt &quot;Comic Sans MS&quot;;</string>
    </property>
   </widget>
   <widget class="QPushButton" name="refreshRoomsButton">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>260</y>
-     <width>131</width>
-     <height>28</height>
+     <x>10</x>
+     <y>350</y>
+     <width>141</width>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(170, 0, 0);
+background-color: rgb(238, 238, 238);
+font: 75 bold italic 9pt &quot;Comic Sans MS&quot;;</string>
    </property>
    <property name="text">
     <string>Refresh Rooms</string>

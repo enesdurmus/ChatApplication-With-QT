@@ -6,32 +6,45 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>334</width>
-    <height>292</height>
+    <width>297</width>
+    <height>264</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(48, 56, 65);</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLineEdit" name="serverIpTextBox">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>30</y>
-      <width>171</width>
-      <height>22</height>
+      <x>160</x>
+      <y>20</y>
+      <width>131</width>
+      <height>31</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(170, 0, 0);
+background-color: rgb(238, 238, 238);
+font: 75 bold 9pt &quot;Comic Sans MS&quot;;</string>
     </property>
    </widget>
    <widget class="QSpinBox" name="portTextBox">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>80</y>
-      <width>171</width>
-      <height>22</height>
+      <x>160</x>
+      <y>70</y>
+      <width>131</width>
+      <height>31</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(170, 0, 0);
+background-color: rgb(238, 238, 238);
+font: 75 bold 9pt &quot;Comic Sans MS&quot;;</string>
     </property>
     <property name="maximum">
      <number>99999</number>
@@ -40,11 +53,16 @@
    <widget class="QPushButton" name="connectButton">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>190</y>
-      <width>121</width>
+      <x>10</x>
+      <y>170</y>
+      <width>131</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(170, 0, 0);
+background-color: rgb(238, 238, 238);
+font: 75 bold italic 9pt &quot;Comic Sans MS&quot;;</string>
     </property>
     <property name="text">
      <string>Connect</string>
@@ -53,11 +71,16 @@
    <widget class="QPushButton" name="QuitButton">
     <property name="geometry">
      <rect>
-      <x>180</x>
-      <y>190</y>
-      <width>121</width>
+      <x>160</x>
+      <y>170</y>
+      <width>131</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(170, 0, 0);
+background-color: rgb(238, 238, 238);
+font: 75 bold italic 9pt &quot;Comic Sans MS&quot;;</string>
     </property>
     <property name="text">
      <string>Quit</string>
@@ -66,50 +89,79 @@
    <widget class="QLineEdit" name="userNameTextBox">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>130</y>
-      <width>171</width>
-      <height>22</height>
+      <x>160</x>
+      <y>120</y>
+      <width>131</width>
+      <height>31</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(170, 0, 0);
+background-color: rgb(238, 238, 238);
+font: 75 bold 9pt &quot;Comic Sans MS&quot;;</string>
     </property>
    </widget>
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>130</y>
-      <width>81</width>
-      <height>16</height>
+      <x>10</x>
+      <y>120</y>
+      <width>131</width>
+      <height>31</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(170, 0, 0);
+background-color: rgb(238, 238, 238);
+font: 75 bold italic 9pt &quot;Comic Sans MS&quot;;</string>
     </property>
     <property name="text">
      <string>UserName : </string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>30</y>
-      <width>91</width>
-      <height>16</height>
+      <x>10</x>
+      <y>20</y>
+      <width>131</width>
+      <height>31</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(170, 0, 0);
+background-color: rgb(238, 238, 238);
+font: 75 bold italic 9pt &quot;Comic Sans MS&quot;;</string>
     </property>
     <property name="text">
      <string>Host Address : </string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>80</y>
-      <width>81</width>
-      <height>16</height>
+      <x>10</x>
+      <y>70</y>
+      <width>131</width>
+      <height>31</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(170, 0, 0);
+background-color: rgb(238, 238, 238);
+font: 75 bold italic 9pt &quot;Comic Sans MS&quot;;</string>
     </property>
     <property name="text">
      <string>Port Number : </string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
   </widget>
@@ -118,7 +170,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>334</width>
+     <width>297</width>
      <height>26</height>
     </rect>
    </property>
