@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>410</width>
-    <height>359</height>
+    <height>362</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,7 +22,7 @@
      <x>290</x>
      <y>13</y>
      <width>111</width>
-     <height>281</height>
+     <height>231</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -88,9 +88,9 @@ font: 75 bold 9pt &quot;Comic Sans MS&quot;;</string>
   <widget class="QPushButton" name="sendButton">
    <property name="geometry">
     <rect>
-     <x>290</x>
+     <x>10</x>
      <y>310</y>
-     <width>111</width>
+     <width>121</width>
      <height>41</height>
     </rect>
    </property>
@@ -106,9 +106,9 @@ font: 75 bold italic 9pt &quot;Comic Sans MS&quot;;</string>
   <widget class="QPushButton" name="downloadButton">
    <property name="geometry">
     <rect>
-     <x>150</x>
+     <x>290</x>
      <y>310</y>
-     <width>121</width>
+     <width>111</width>
      <height>41</height>
     </rect>
    </property>
@@ -124,7 +124,7 @@ font: 75 bold italic 9pt &quot;Comic Sans MS&quot;;</string>
   <widget class="QPushButton" name="uploadFileButton">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>150</x>
      <y>310</y>
      <width>121</width>
      <height>41</height>
@@ -137,6 +137,19 @@ font: 75 bold italic 9pt &quot;Comic Sans MS&quot;;</string>
    </property>
    <property name="text">
     <string>Upload File</string>
+   </property>
+  </widget>
+  <widget class="QProgressBar" name="downloadProgressBar">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>260</y>
+     <width>111</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="value">
+    <number>24</number>
    </property>
   </widget>
  </widget>

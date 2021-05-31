@@ -25,6 +25,7 @@ public:
     Client *client;
     QList<QString> *clients;
 
+    void UpdateProgressBar(int n);
     void keyPressEvent(QKeyEvent *event) override;
 
 private slots:

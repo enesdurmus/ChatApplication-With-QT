@@ -20,7 +20,7 @@ public:
     void ReceiveMessage(QString);
     Client *client;
     QString friendClient;
-
+    void UpdateProgressBar(int n);
     void keyPressEvent(QKeyEvent *event) override;
 
 private slots:

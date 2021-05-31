@@ -11,6 +11,8 @@ Client::Client(){
     this->fileReading = false;
     this->fileSize = -1;
     this->actualFileSize = 0;
+    this->downloadingChatType = "null";
+    this->downloadingChat = nullptr;
 }
 
 Client::Client(QString name){
@@ -19,6 +21,8 @@ Client::Client(QString name){
     this->privateChats = new QList<PrivateChat*>;
     this->socket = nullptr;
     isUserNameUnique = false;
+    this->downloadingChatType = "null";
+    this->downloadingChat = nullptr;
     this->fileName = "null";
     this->fileDirectory = "null";
     this->fileReading = false;

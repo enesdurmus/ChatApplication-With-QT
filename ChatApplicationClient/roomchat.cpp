@@ -10,6 +10,7 @@ RoomChat::RoomChat(QString roomName, Client *c, QWidget *parent) :
     this->client = c;
     this->clients = new QList<QString>;
     ui->setupUi(this);
+    ui->downloadProgressBar->setMaximum(100);
 }
 
 RoomChat::~RoomChat()
@@ -59,13 +60,15 @@ void RoomChat::ReceiveMessage(QString userName, QString msg){
 
 void RoomChat::on_downloadButton_clicked()
 {
-    if(ui->chatListWidget->currentItem() == NULL){
+    if(ui->chatListWidget->currentItem() != NULL){
         if(ui->chatListWidget->currentItem()->text().contains("File->")){
             client->fileDirectory = QFileDialog::getExistingDirectory(this, tr("Open Directory"), "/home",
                                                                       QFileDialog::ShowDirsOnly
                                                                       | QFileDialog::DontResolveSymlinks);
             client->fileDirectory.append("/");
             client->fileName = ui->chatListWidget->currentItem()->text().split("->").at(1);
+            client->downloadingChat = this;
+            client->downloadingChatType = "roomChat";
 
             qDebug() << client->fileName << endl;
             QMap<QString, QString> msg;
@@ -81,7 +84,7 @@ void RoomChat::on_downloadButton_clicked()
 void RoomChat::on_uploadFileButton_clicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this,tr("Select File"), "/home",
-                                                    tr("Files (*.png *.xpm *.jpg *.txt *.xml *.pdf)"));
+                                                    tr("Files (*.png *.xpm *.jpg *.txt *.xml *.pdf *.rar)"));
     QFile file(fileName);
 
     if(file.open(QIODevice::ReadOnly)){
@@ -119,4 +122,8 @@ void RoomChat::keyPressEvent(QKeyEvent *event){
             on_sendButton_clicked();
         }
     }
+}
+
+void RoomChat::UpdateProgressBar(int n){
+    ui->downloadProgressBar->setValue(n);
 }

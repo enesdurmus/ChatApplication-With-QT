@@ -9,6 +9,8 @@ PrivateChat::PrivateChat(Client *client, QString fClient, QWidget *parent) :
     this->client = client;
     this->friendClient = fClient;
     ui->setupUi(this);
+    ui->downloadProgressBar->setMaximum(100);
+
 }
 
 PrivateChat::~PrivateChat()
@@ -51,7 +53,7 @@ void PrivateChat::on_sendButton_clicked()
 
 void PrivateChat::on_uploadFileButton_clicked()
 {
-    QString fileName = QFileDialog::getOpenFileName(this,tr("Select File"), "/home", tr("Files (*.png *.xpm *.jpg *.txt *.xml *.pdf)"));
+    QString fileName = QFileDialog::getOpenFileName(this,tr("Select File"), "/home", tr("Files (*.png *.xpm *.jpg *.txt *.xml *.pdf *.rar)"));
     QFile file(fileName);
 
     if(file.open(QIODevice::ReadOnly)){
@@ -93,7 +95,8 @@ void PrivateChat::on_downloadFileButton_clicked()
     client->fileDirectory.append("/");
     client->fileName = ui->chatListWidget->currentItem()->text().split("->").at(1);
 
-    qDebug() << client->fileName << endl;
+    client->downloadingChat = this;
+    client->downloadingChatType = "privateChat";
     QMap<QString, QString> msg;
     msg.insert("type", "downloadFile");
     msg.insert("fileName", client->fileName);
@@ -107,3 +110,8 @@ void PrivateChat::keyPressEvent(QKeyEvent *event){
         }
     }
 }
+
+void PrivateChat::UpdateProgressBar(int n){
+    ui->downloadProgressBar->setValue(n);
+}
+

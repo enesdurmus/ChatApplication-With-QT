@@ -24,7 +24,6 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
 
         if(client->fileReading){
             QByteArray line = client->socket->readAll();
-
             QFile target;
             QString dir = client->fileDirectory;
             target.setFileName(dir.append(client->fileName));
@@ -39,6 +38,11 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
             target.close();
 
             client->fileSize = target.size();
+            if(client->downloadingChatType == "roomChat")
+                static_cast<RoomChat*>(client->downloadingChat)->UpdateProgressBar(qFloor(100 * target.size() / client->actualFileSize));
+            else
+                static_cast<PrivateChat*>(client->downloadingChat)->UpdateProgressBar(qFloor(100 * target.size() / client->actualFileSize));
+
             qDebug() << "actualFileSize  " << client->actualFileSize << "fileSize " << client->fileSize << endl;
 
         }else{
@@ -50,6 +54,8 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
             client->fileReading = false;
             client->fileSize = -1;
             client->actualFileSize = 0;
+            client->downloadingChat = nullptr;
+            client->downloadingChatType = "null";
             qDebug() << "File has downloaded..." << endl;
         }
 

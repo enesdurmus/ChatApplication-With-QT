@@ -108,7 +108,6 @@ Client::~Client(){
     delete privateChats;
     socket->close();
     delete socket;
-    qDebug() << "siilyormu " << endl;
     this->destroyed();
 }
 
