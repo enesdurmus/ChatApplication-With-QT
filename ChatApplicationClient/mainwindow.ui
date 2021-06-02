@@ -31,6 +31,9 @@
 background-color: rgb(238, 238, 238);
 font: 75 bold 9pt &quot;Comic Sans MS&quot;;</string>
     </property>
+    <property name="text">
+     <string>18.117.194.149</string>
+    </property>
    </widget>
    <widget class="QSpinBox" name="portTextBox">
     <property name="geometry">
@@ -48,6 +51,9 @@ font: 75 bold 9pt &quot;Comic Sans MS&quot;;</string>
     </property>
     <property name="maximum">
      <number>99999</number>
+    </property>
+    <property name="value">
+     <number>2000</number>
     </property>
    </widget>
    <widget class="QPushButton" name="connectButton">

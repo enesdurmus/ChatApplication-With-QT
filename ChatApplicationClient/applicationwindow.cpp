@@ -10,107 +10,73 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
     Client *theClient = new Client(name);
     theClient->socket = new QTcpSocket(this);
     theClient->socket->connectToHost(ip, port);
+    theClient->socket->waitForConnected();
     client = theClient;
 
     QMap<QString, QString> connectMap;
-    connectMap.insert("type", "connect");
+    connectMap.insert("type", "Connect");
     connectMap.insert("name", theClient->name);
     theClient->Send(connectMap);
+
+    //QMap<QString, QString> null;
+ //   null.insert("null", "null");
+ //   theClient->Send(null);
 
     ui->setupUi(this);
 
     connect(client->socket, &QTcpSocket::readyRead, [&](){
         QMap<QString, QString> map;
 
+        // If server send us file info we get into readFile and start to read file bytes.
         if(client->fileReading){
-            QByteArray line = client->socket->readAll();
-            QFile target;
-            QString dir = client->fileDirectory;
-            target.setFileName(dir.append(client->fileName));
-
-            if (!target.open(QIODevice::WriteOnly | QIODevice::Append)) {
-                qDebug() << "Can't open file for written";
-                return;
-            }
-
-            target.write(line);
-
-            target.close();
-
-            client->fileSize = target.size();
-            if(client->downloadingChatType == "roomChat")
-                static_cast<RoomChat*>(client->downloadingChat)->UpdateProgressBar(qFloor(100 * target.size() / client->actualFileSize));
-            else
-                static_cast<PrivateChat*>(client->downloadingChat)->UpdateProgressBar(qFloor(100 * target.size() / client->actualFileSize));
-
+            ReadFile();
             qDebug() << "actualFileSize  " << client->actualFileSize << "fileSize " << client->fileSize << endl;
-
-        }else{
+        }else{  // If its there is not file coming we read socket via readStream.
             QDataStream readStream(client->socket);
             readStream >> map;
         }
-
+        // if there is a coming file we check if its fully come.
         if(client->fileSize >= client->actualFileSize){
-            client->fileReading = false;
-            client->fileSize = -1;
-            client->actualFileSize = 0;
-            client->downloadingChat = nullptr;
-            client->downloadingChatType = "null";
+            CheckDownloadingFileSize();
             qDebug() << "File has downloaded..." << endl;
         }
 
         // Evalute the receiving type
 
-        if(map.value("type") == "allUsers"){
-
-            ui->usersListWidget->clear();
-            QList<QString> users;
-            users = map.values();
-            for(int i = 0; i < users.size(); i++){
-                if(users.at(i) != "allUsers"){
-                    ui->usersListWidget->addItem(users.at(i));}
-            }
-            client->isUserNameUnique = true;
-            qDebug() << "Receiving all users from server..." << endl;
-
-        }else if(map.value("type") == "userNameTaken"){
+        if(map.value("type") == "userNameTaken"){
 
             client->isUserNameUnique = false;
             qDebug() << "User name has taken..." << endl;
 
-        }else if(map.value("type") == "disconnectPrivateChat"){
+        }else if(map.value("type") == "GetAllUsers"){
 
-            PrivateChat *pc = client->FindPrivateChat(map.value("friendName"));
-            client->privateChats->removeOne(pc);
-            pc->setAttribute(Qt::WA_DeleteOnClose, false);
-            pc->close();
-            qDebug() << "Closing private chat with " << map.value("friendName") << "..." << endl;
+            GetUsers(map);
+            qDebug() << "Receiving all users from server..." << endl;
 
         }else if(map.value("type") == "allRooms"){
 
-            ui->roomsListWidget->clear();
-            QList<QString> rooms;
-            rooms = map.values();
-            for(int i = 0; i < rooms.size(); i++){
-                if(rooms.at(i) != "allRooms"){
-                    ui->roomsListWidget->addItem(rooms.at(i));}
-            }
+            GetRooms(map);
             qDebug() << "Receiving all rooms from server..." << endl;
+
+        }else if(map.value("type") == "selectedRoomUsers"){
+
+            GetSelectedRoomUsers(map);
+            qDebug() << "Receiving all room users from server..." << endl;
 
         }else if(map.value("type") == "roomUsers"){
 
-            RoomChat *r = client->FindRoom(map.value("roomName"));
-            QList<QString> roomUsers;
-            roomUsers = map.values();
-            r->clients->clear();
-
-            for (int i = 0; i < roomUsers.size(); i++) {
-                if(roomUsers.at(i) != "roomUsers" && roomUsers.at(i) != r->roomName)
-                    r->clients->append(roomUsers.at(i));
-            }
-
-            r->RefreshUsers();
+            GetRoomUsers(map);
             qDebug() << "Receiving room users from server..." << endl;
+
+        }else if(map.value("type") == "privateChatCreate"){
+
+            CreatePrivateChat(map);
+            qDebug() << "Receiving private chat info from server..." << endl;
+
+        }else if(map.value("type") == "disconnectPrivateChat"){
+
+            DisconnectPrivateChat(map);
+            qDebug() << "Closing private chat with " << map.value("friendName") << "..." << endl;
 
         }else if(map.value("type") == "roomMessage"){
 
@@ -118,17 +84,6 @@ ApplicationWindow::ApplicationWindow(QString ip, int port, QString name, QWidget
             r->ReceiveMessage(map.value("userName"), map.value("message"));
 
             qDebug() << "Receiving room message from server..." << endl;
-
-        }else if(map.value("type") == "privateChatCreate"){
-
-            PrivateChat *privateChat = new PrivateChat(this->client, map.value("userName"));
-            privateChat->setWindowTitle(map.value("userName"));
-
-            client->privateChats->append(privateChat);
-
-            privateChat->show();
-
-            qDebug() << "Receiving private chat info from server..." << endl;
 
         }else if(map.value("type") == "privateChatMessage"){
 
@@ -170,6 +125,101 @@ ApplicationWindow::~ApplicationWindow()
     delete client;
     delete ui;
     qDebug() << "Application window deleted..." << endl;
+}
+
+void ApplicationWindow::GetUsers(QMap<QString, QString> map){
+    ui->usersListWidget->clear();
+    QList<QString> users;
+    users = map.values();
+    for(int i = 0; i < users.size(); i++){
+        if(users.at(i) != "GetAllUsers"){
+            QString path = "Images/";
+            ui->usersListWidget->addItem(new QListWidgetItem(QIcon(path.append("user.png")), users.at(i)));
+        }
+    }
+    client->isUserNameUnique = true;
+}
+
+void ApplicationWindow::GetRooms(QMap<QString, QString> map){
+    ui->roomsListWidget->clear();
+    QList<QString> rooms;
+    rooms = map.values();
+    for(int i = 0; i < rooms.size(); i++){
+        if(rooms.at(i) != "allRooms"){
+            QString path = "Images/";
+            ui->roomsListWidget->addItem(new QListWidgetItem(QIcon(path.append("multipleUser.png")), rooms.at(i)));
+        }
+    }
+}
+
+void ApplicationWindow::ReadFile(){
+    QByteArray line = client->socket->readAll();
+    QFile target;
+    QString dir = client->fileDirectory;
+    target.setFileName(dir.append(client->fileName));
+
+    if (!target.open(QIODevice::WriteOnly | QIODevice::Append)) {
+        qDebug() << "Can't open file for written";
+        return;
+    }
+
+    target.write(line);
+
+    target.close();
+
+    client->fileSize = target.size();
+    if(client->downloadingChatType == "roomChat")
+        static_cast<RoomChat*>(client->downloadingChat)->UpdateProgressBar(qFloor(100 * target.size() / client->actualFileSize));
+    else
+        static_cast<PrivateChat*>(client->downloadingChat)->UpdateProgressBar(qFloor(100 * target.size() / client->actualFileSize));
+
+}
+
+void ApplicationWindow::CheckDownloadingFileSize(){
+    client->fileReading = false;
+    client->fileSize = -1;
+    client->actualFileSize = 0;
+    client->downloadingChat = nullptr;
+    client->downloadingChatType = "null";
+}
+
+void ApplicationWindow::GetRoomUsers(QMap<QString, QString> map){
+    RoomChat *r = client->FindRoom(map.value("roomName"));
+    QList<QString> roomUsers;
+    roomUsers = map.values();
+    r->clients->clear();
+
+    for (int i = 0; i < roomUsers.size(); i++) {
+        if(roomUsers.at(i) != "roomUsers" && roomUsers.at(i) != r->roomName)
+            r->clients->append(roomUsers.at(i));
+    }
+
+    r->RefreshUsers();
+}
+
+void ApplicationWindow::CreatePrivateChat(QMap<QString, QString> map){
+    PrivateChat *privateChat = new PrivateChat(this->client, map.value("userName"));
+    privateChat->setWindowTitle(map.value("userName"));
+    client->privateChats->append(privateChat);
+    privateChat->show();
+}
+
+void ApplicationWindow::DisconnectPrivateChat(QMap<QString, QString> map){
+    PrivateChat *pc = client->FindPrivateChat(map.value("friendName"));
+    client->privateChats->removeOne(pc);
+    pc->setAttribute(Qt::WA_DeleteOnClose, false);
+    pc->close();
+}
+
+void ApplicationWindow::GetSelectedRoomUsers(QMap<QString, QString> map){
+    ui->roomUsersListWidget->clear();
+    QList<QString> users;
+    users = map.values();
+    for(int i = 0; i < users.size(); i++){
+        if(users.at(i) != "selectedRoomUsers")
+            ui->roomUsersListWidget->addItem(users.at(i));
+
+    }
 }
 
 void ApplicationWindow::on_createRoomButton_clicked()
@@ -247,4 +297,12 @@ void ApplicationWindow::on_privateChatButton_clicked()
     }else{
         QMessageBox::critical(this, "Warning", "You Can't Chat With Yourself...");
     }
+}
+
+void ApplicationWindow::on_roomsListWidget_itemPressed(QListWidgetItem *item)
+{
+    QMap<QString, QString> roomUsers;
+    roomUsers.insert("type", "selectedRoomUsers");
+    roomUsers.insert("roomName", item->text());
+    client->Send(roomUsers);
 }

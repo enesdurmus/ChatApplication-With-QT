@@ -19,7 +19,7 @@ void MainWindow::on_connectButton_clicked()
 {
     ApplicationWindow *appW = new ApplicationWindow(ui->serverIpTextBox->text(), ui->portTextBox->value(), ui->userNameTextBox->text());
     if(appW->client->socket->waitForConnected(3000)){  // if its connect to server open.
-        appW->client->socket->waitForReadyRead(3000);
+        appW->client->socket->waitForReadyRead();
         if(appW->client->isUserNameUnique){
             appW->show();
             hide();

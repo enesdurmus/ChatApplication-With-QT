@@ -27,6 +27,7 @@ public:
 
     void UpdateProgressBar(int n);
     void keyPressEvent(QKeyEvent *event) override;
+    void UploadEmojis();
 
 private slots:
     void on_sendButton_clicked();
@@ -34,6 +35,8 @@ private slots:
     void on_downloadButton_clicked();
 
     void on_uploadFileButton_clicked();
+
+    void on_emojiComboBox_currentIndexChanged(int index);
 
 private:
     Ui::RoomChat *ui;

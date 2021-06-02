@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>368</width>
-    <height>337</height>
+    <width>303</width>
+    <height>341</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,8 +18,8 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>110</y>
-      <width>93</width>
+      <y>80</y>
+      <width>101</width>
       <height>28</height>
      </rect>
     </property>
@@ -27,25 +27,12 @@
      <string>Start</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="sendButton">
-    <property name="geometry">
-     <rect>
-      <x>120</x>
-      <y>110</y>
-      <width>93</width>
-      <height>28</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Send</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="quitButton">
     <property name="geometry">
      <rect>
-      <x>230</x>
-      <y>110</y>
-      <width>93</width>
+      <x>182</x>
+      <y>80</y>
+      <width>111</width>
       <height>28</height>
      </rect>
     </property>
@@ -69,7 +56,7 @@
    <widget class="QSpinBox" name="portNumberTextBox">
     <property name="geometry">
      <rect>
-      <x>130</x>
+      <x>180</x>
       <y>30</y>
       <width>111</width>
       <height>22</height>
@@ -79,13 +66,13 @@
      <number>99999</number>
     </property>
    </widget>
-   <widget class="QLineEdit" name="messageTextBox">
+   <widget class="QListWidget" name="listWidget">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>161</y>
-      <width>311</width>
-      <height>21</height>
+      <y>120</y>
+      <width>281</width>
+      <height>161</height>
      </rect>
     </property>
    </widget>
@@ -95,7 +82,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>368</width>
+     <width>303</width>
      <height>26</height>
     </rect>
    </property>

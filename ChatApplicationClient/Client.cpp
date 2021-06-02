@@ -42,13 +42,18 @@ void Client::Send(QMap<QString, QString> map){
     QDataStream sendStream(socket);
     sendStream << map;
     this->socket->waitForBytesWritten();
-    this->socket->flush();   
+    this->socket->flush();
+   /* QMap<QString, QString> null;
+    null.insert("null", "null");
+    sendStream << null;
+    this->socket->flush();*/
 }
 
 void Client::SendFile(QFile *file){
     QByteArray q = file->readAll();
     qDebug() << q.size() << endl;
     this->socket->write(q);
+    this->socket->waitForBytesWritten();
     this->socket->flush();
 }
 

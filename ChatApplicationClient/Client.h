@@ -10,6 +10,7 @@
 #include <QList>
 #include "roomchat.h"
 #include "privatechat.h"
+#include "applicationwindow.h"
 #include "QtMath"
 
 class RoomChat;
@@ -24,7 +25,6 @@ public:
     void Send(QMap<QString, QString>);
     void SendFile(QFile*);
     void DisconnectRoom(RoomChat*);
-    void ReadFile();
 
     RoomChat *FindRoom(QString roomName);
     PrivateChat *FindPrivateChat(QString friendName);

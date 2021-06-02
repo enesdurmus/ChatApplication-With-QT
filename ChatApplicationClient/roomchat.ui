@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>410</width>
-    <height>362</height>
+    <height>340</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -28,15 +28,18 @@
    <property name="styleSheet">
     <string notr="true">color: rgb(170, 0, 0);
 background-color: rgb(238, 238, 238);
-font: 75 bold 9pt &quot;Comic Sans MS&quot;;</string>
+font: 75 bold italic 10pt &quot;Comic Sans MS&quot;;</string>
    </property>
   </widget>
   <widget class="QListWidget" name="chatListWidget">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>10</x>
      <y>13</y>
-     <width>261</width>
+     <width>271</width>
      <height>231</height>
     </rect>
    </property>
@@ -55,7 +58,7 @@ font: 75 bold 9pt &quot;Comic Sans MS&quot;;</string>
    <property name="styleSheet">
     <string notr="true">color: rgb(170, 0, 0);
 background-color: rgb(238, 238, 238);
-font: 75 bold italic 9pt &quot;Comic Sans MS&quot;;</string>
+font: 75 bold italic 10pt &quot;Comic Sans MS&quot;;</string>
    </property>
    <property name="alternatingRowColors">
     <bool>true</bool>
@@ -75,8 +78,8 @@ font: 75 bold italic 9pt &quot;Comic Sans MS&quot;;</string>
     <rect>
      <x>10</x>
      <y>253</y>
-     <width>261</width>
-     <height>41</height>
+     <width>271</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -89,8 +92,8 @@ font: 75 bold 9pt &quot;Comic Sans MS&quot;;</string>
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>310</y>
-     <width>121</width>
+     <y>290</y>
+     <width>71</width>
      <height>41</height>
     </rect>
    </property>
@@ -106,16 +109,16 @@ font: 75 bold italic 9pt &quot;Comic Sans MS&quot;;</string>
   <widget class="QPushButton" name="downloadButton">
    <property name="geometry">
     <rect>
-     <x>290</x>
-     <y>310</y>
-     <width>111</width>
+     <x>190</x>
+     <y>290</y>
+     <width>91</width>
      <height>41</height>
     </rect>
    </property>
    <property name="styleSheet">
     <string notr="true">color: rgb(170, 0, 0);
 background-color: rgb(238, 238, 238);
-font: 75 bold italic 9pt &quot;Comic Sans MS&quot;;</string>
+font: 75 bold italic 8pt &quot;Comic Sans MS&quot;;</string>
    </property>
    <property name="text">
     <string>Download File</string>
@@ -124,9 +127,9 @@ font: 75 bold italic 9pt &quot;Comic Sans MS&quot;;</string>
   <widget class="QPushButton" name="uploadFileButton">
    <property name="geometry">
     <rect>
-     <x>150</x>
-     <y>310</y>
-     <width>121</width>
+     <x>90</x>
+     <y>290</y>
+     <width>91</width>
      <height>41</height>
     </rect>
    </property>
@@ -143,13 +146,40 @@ font: 75 bold italic 9pt &quot;Comic Sans MS&quot;;</string>
    <property name="geometry">
     <rect>
      <x>290</x>
-     <y>260</y>
+     <y>254</y>
      <width>111</width>
      <height>31</height>
     </rect>
    </property>
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>1600000</height>
+    </size>
+   </property>
    <property name="value">
-    <number>24</number>
+    <number>0</number>
+   </property>
+   <property name="textVisible">
+    <bool>true</bool>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="emojiComboBox">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>290</y>
+     <width>111</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(170, 0, 0);
+background-color: rgb(238, 238, 238);
+font: 75 bold 9pt &quot;Comic Sans MS&quot;;</string>
    </property>
   </widget>
  </widget>

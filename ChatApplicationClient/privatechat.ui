@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>371</width>
+    <width>409</width>
     <height>350</height>
    </rect>
   </property>
@@ -21,14 +21,14 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>351</width>
+     <width>391</width>
      <height>241</height>
     </rect>
    </property>
    <property name="styleSheet">
     <string notr="true">color: rgb(170, 0, 0);
 background-color: rgb(238, 238, 238);
-font: 75 bold italic 9pt &quot;Comic Sans MS&quot;;</string>
+font: 75 bold italic 10pt &quot;Comic Sans MS&quot;;</string>
    </property>
    <property name="textElideMode">
     <enum>Qt::ElideLeft</enum>
@@ -42,7 +42,7 @@ font: 75 bold italic 9pt &quot;Comic Sans MS&quot;;</string>
     <rect>
      <x>10</x>
      <y>300</y>
-     <width>111</width>
+     <width>81</width>
      <height>41</height>
     </rect>
    </property>
@@ -60,7 +60,7 @@ font: 75 bold italic 9pt &quot;Comic Sans MS&quot;;</string>
     <rect>
      <x>10</x>
      <y>260</y>
-     <width>231</width>
+     <width>291</width>
      <height>31</height>
     </rect>
    </property>
@@ -73,9 +73,9 @@ font: 75 bold italic 9pt &quot;Comic Sans MS&quot;;</string>
   <widget class="QPushButton" name="uploadFileButton">
    <property name="geometry">
     <rect>
-     <x>130</x>
+     <x>100</x>
      <y>300</y>
-     <width>111</width>
+     <width>91</width>
      <height>41</height>
     </rect>
    </property>
@@ -91,9 +91,9 @@ font: 75 bold italic 9pt &quot;Comic Sans MS&quot;;</string>
   <widget class="QPushButton" name="downloadFileButton">
    <property name="geometry">
     <rect>
-     <x>250</x>
+     <x>200</x>
      <y>300</y>
-     <width>111</width>
+     <width>101</width>
      <height>41</height>
     </rect>
    </property>
@@ -109,15 +109,35 @@ font: 75 bold italic 9pt &quot;Comic Sans MS&quot;;</string>
   <widget class="QProgressBar" name="downloadProgressBar">
    <property name="geometry">
     <rect>
-     <x>250</x>
+     <x>310</x>
      <y>260</y>
-     <width>111</width>
+     <width>91</width>
      <height>31</height>
     </rect>
    </property>
    <property name="value">
-    <number>24</number>
+    <number>0</number>
    </property>
+  </widget>
+  <widget class="QComboBox" name="emojiComboBox">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>300</y>
+     <width>91</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(170, 0, 0);
+background-color: rgb(238, 238, 238);
+font: 75 bold italic 10pt &quot;Comic Sans MS&quot;;</string>
+   </property>
+   <item>
+    <property name="text">
+     <string/>
+    </property>
+   </item>
   </widget>
  </widget>
  <resources/>

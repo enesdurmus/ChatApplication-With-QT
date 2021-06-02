@@ -22,6 +22,7 @@ public:
     QString friendClient;
     void UpdateProgressBar(int n);
     void keyPressEvent(QKeyEvent *event) override;
+    void UploadEmojis();
 
 private slots:
     void on_sendButton_clicked();
@@ -29,6 +30,8 @@ private slots:
     void on_uploadFileButton_clicked();
 
     void on_downloadFileButton_clicked();
+
+    void on_emojiComboBox_currentIndexChanged(int index);
 
 private:
     Ui::PrivateChat *ui;

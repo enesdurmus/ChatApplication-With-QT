@@ -6,6 +6,7 @@
 #include "Client.h"
 #include "roomchat.h"
 #include "privatechat.h"
+#include <QListWidgetItem>
 
 namespace Ui {
 class ApplicationWindow;
@@ -18,8 +19,16 @@ class ApplicationWindow : public QWidget
 public:
     explicit ApplicationWindow(QString, int, QString, QWidget *parent = nullptr);
     ~ApplicationWindow();
-    void ReadServer();
     Client *client;
+    void ReadFile();
+    void CheckDownloadingFileSize();
+    void GetUsers(QMap<QString, QString> map);
+    void GetRooms(QMap<QString, QString> map);
+    void GetRoomUsers(QMap<QString, QString> map);
+    void GetSelectedRoomUsers(QMap<QString, QString> map);
+    void CreatePrivateChat(QMap<QString, QString> map);
+    void DisconnectPrivateChat(QMap<QString, QString> map);
+
 
 private slots:
 
@@ -30,6 +39,8 @@ private slots:
     void on_refreshRoomsButton_clicked();
 
     void on_privateChatButton_clicked();
+
+    void on_roomsListWidget_itemPressed(QListWidgetItem *item);
 
 private:
     Ui::ApplicationWindow *ui;

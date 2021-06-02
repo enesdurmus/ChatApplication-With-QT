@@ -1,5 +1,6 @@
 #include "roomchat.h"
 #include "ui_roomchat.h"
+#include <QStandardItemModel>
 
 RoomChat::RoomChat(QString roomName, Client *c, QWidget *parent) :
     QWidget(parent),
@@ -11,6 +12,7 @@ RoomChat::RoomChat(QString roomName, Client *c, QWidget *parent) :
     this->clients = new QList<QString>;
     ui->setupUi(this);
     ui->downloadProgressBar->setMaximum(100);
+    UploadEmojis();
 }
 
 RoomChat::~RoomChat()
@@ -29,7 +31,8 @@ RoomChat::~RoomChat()
 void RoomChat::RefreshUsers(){
     ui->usersListWidget->clear();
     for(int i = 0; i < this->clients->size(); i++){
-        ui->usersListWidget->addItem(this->clients->at(i));
+        QString path = "Images/";
+        ui->usersListWidget->addItem(new QListWidgetItem(QIcon(path.append("user.png")), this->clients->at(i)));
     }
 }
 
@@ -39,23 +42,36 @@ void RoomChat::on_sendButton_clicked()
     sendMessage.insert("type", "roomMessage");
     sendMessage.insert("roomName", this->roomName);
     sendMessage.insert("message", ui->inputTextBox->text());
+    QListWidgetItem* lwi;
 
-    QString text = this->client->name;
-    text.append("  :  ").append(ui->inputTextBox->text());
+    if(ui->inputTextBox->text().contains("emo->")){
+        QString path = "Images/";
+        QString u = " : ";
+        lwi = new QListWidgetItem(QIcon(path.append(ui->inputTextBox->text().at(5))), u.append(client->name));
+    }else{
+        QString text = this->client->name;
+        text.append(" : ").append(ui->inputTextBox->text());
+        lwi = new QListWidgetItem(text);
+    }
 
-    QListWidgetItem* lwi = new QListWidgetItem(text);
     ui->chatListWidget->addItem( lwi );
     lwi->setTextAlignment(Qt::AlignRight);
     lwi->setBackgroundColor(Qt::transparent);
     lwi->setForeground(Qt::green);
-    text.clear();
     ui->inputTextBox->clear();
-
+    ui->chatListWidget->scrollToBottom();
     client->Send(sendMessage);
 }
 
 void RoomChat::ReceiveMessage(QString userName, QString msg){
-    ui->chatListWidget->addItem(userName.append("  :  ").append(msg));
+    if(msg.contains("emo->")){
+        QString path = "Images/";
+        QString u = " : ";
+        ui->chatListWidget->addItem(new QListWidgetItem(QIcon(path.append(msg.at(5)).append(".png")),u.append(userName)));
+    }else{
+        ui->chatListWidget->addItem(userName.append("  :  ").append(msg));
+    }
+    ui->chatListWidget->scrollToBottom();
 }
 
 void RoomChat::on_downloadButton_clicked()
@@ -126,4 +142,19 @@ void RoomChat::keyPressEvent(QKeyEvent *event){
 
 void RoomChat::UpdateProgressBar(int n){
     ui->downloadProgressBar->setValue(n);
+}
+
+void RoomChat::UploadEmojis(){
+    for (int i = 0; i < 10; i++) {
+        QString path = "Images/";
+        ui->emojiComboBox->addItem(QIcon(path.append(QString::number(i)).append(".png")), "");
+    }
+    ui->inputTextBox->clear();
+}
+
+void RoomChat::on_emojiComboBox_currentIndexChanged(int index)
+{
+    QString emojiCode = "emo->";
+    emojiCode.append(QString::number(index));
+    ui->inputTextBox->setText(emojiCode);
 }

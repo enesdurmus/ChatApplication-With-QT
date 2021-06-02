@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>321</width>
-    <height>480</height>
+    <height>455</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,13 +22,13 @@
      <x>10</x>
      <y>50</y>
      <width>141</width>
-     <height>231</height>
+     <height>121</height>
     </rect>
    </property>
    <property name="styleSheet">
     <string notr="true">color: rgb(170, 0, 0);
 background-color: rgb(238, 238, 238);
-font: 75 bold 9pt &quot;Comic Sans MS&quot;;</string>
+font: 75 bold 10pt &quot;Comic Sans MS&quot;;</string>
    </property>
   </widget>
   <widget class="QListWidget" name="usersListWidget">
@@ -37,13 +37,13 @@ font: 75 bold 9pt &quot;Comic Sans MS&quot;;</string>
      <x>170</x>
      <y>50</y>
      <width>141</width>
-     <height>231</height>
+     <height>241</height>
     </rect>
    </property>
    <property name="styleSheet">
     <string notr="true">color: rgb(170, 0, 0);
 background-color: rgb(238, 238, 238);
-font: 75 bold 9pt &quot;Comic Sans MS&quot;;</string>
+font: 75 bold 10pt &quot;Comic Sans MS&quot;;</string>
    </property>
   </widget>
   <widget class="QLabel" name="label">
@@ -106,7 +106,7 @@ font: 75 bold italic 9pt &quot;Comic Sans MS&quot;;</string>
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>300</y>
+     <y>350</y>
      <width>141</width>
      <height>41</height>
     </rect>
@@ -123,9 +123,9 @@ font: 75 bold italic 9pt &quot;Comic Sans MS&quot;;</string>
   <widget class="QPushButton" name="createRoomButton">
    <property name="geometry">
     <rect>
-     <x>180</x>
-     <y>410</y>
-     <width>121</width>
+     <x>170</x>
+     <y>400</y>
+     <width>141</width>
      <height>41</height>
     </rect>
    </property>
@@ -142,8 +142,8 @@ font: 75 bold italic 9pt &quot;Comic Sans MS&quot;;</string>
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>410</y>
-     <width>151</width>
+     <y>400</y>
+     <width>141</width>
      <height>41</height>
     </rect>
    </property>
@@ -156,7 +156,7 @@ font: 75 bold 9pt &quot;Comic Sans MS&quot;;</string>
   <widget class="QPushButton" name="refreshRoomsButton">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>170</x>
      <y>350</y>
      <width>141</width>
      <height>41</height>
@@ -169,6 +169,40 @@ font: 75 bold italic 9pt &quot;Comic Sans MS&quot;;</string>
    </property>
    <property name="text">
     <string>Refresh Rooms</string>
+   </property>
+  </widget>
+  <widget class="QListWidget" name="roomUsersListWidget">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>220</y>
+     <width>141</width>
+     <height>121</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(170, 0, 0);
+background-color: rgb(238, 238, 238);
+font: 75 bold 10pt &quot;Comic Sans MS&quot;;</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>180</y>
+     <width>141</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(238, 238, 238);</string>
+   </property>
+   <property name="text">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt; font-weight:600; font-style:italic; color:#aa0000;&quot;&gt;Room Users&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
  </widget>

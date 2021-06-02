@@ -2,11 +2,13 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "Server.h"
+#include "server.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
+
+class Server;
 
 class MainWindow : public QMainWindow
 {
@@ -14,13 +16,12 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget *parent = nullptr);
+    void Display(const QString msg);
     Server *server;
     ~MainWindow();
 
 private slots:
     void on_startServerButton_clicked();
-
-    void on_sendButton_clicked();
 
     void on_quitButton_clicked();
 

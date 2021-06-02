@@ -10,7 +10,7 @@ PrivateChat::PrivateChat(Client *client, QString fClient, QWidget *parent) :
     this->friendClient = fClient;
     ui->setupUi(this);
     ui->downloadProgressBar->setMaximum(100);
-
+    UploadEmojis();
 }
 
 PrivateChat::~PrivateChat()
@@ -27,7 +27,15 @@ PrivateChat::~PrivateChat()
 
 void PrivateChat::ReceiveMessage(QString msg){
     QString n = this->friendClient;
-    ui->chatListWidget->addItem(n.append("  :  ").append(msg));
+    if(msg.contains("emo->")){
+        QString path = "Images/";
+        QString u = " : ";
+        ui->chatListWidget->addItem(new QListWidgetItem(QIcon(path.append(msg.at(5)).append(".png")),u.append(friendClient)));
+    }else{
+        ui->chatListWidget->addItem(n.append(" : ").append(msg));
+    }
+    ui->chatListWidget->scrollToBottom();
+
 }
 
 void PrivateChat::on_sendButton_clicked()
@@ -36,16 +44,22 @@ void PrivateChat::on_sendButton_clicked()
     sendMessage.insert("type", "privateChatMessage");
     sendMessage.insert("friendUserName" , this->friendClient);
     sendMessage.insert("message", ui->inputTextBox->text());
+    QListWidgetItem* lwi;
 
-    QString text = this->client->name;
-    text.append("  :  ").append(ui->inputTextBox->text());
+    if(ui->inputTextBox->text().contains("emo->")){
+        QString path = "Images/";
+        QString u = " : ";
+        lwi = new QListWidgetItem(QIcon(path.append(ui->inputTextBox->text().at(5))), u.append(client->name));
+    }else{
+        QString text = this->client->name;
+        text.append(" : ").append(ui->inputTextBox->text());
+        lwi = new QListWidgetItem(text);
+    }
 
-    QListWidgetItem* lwi = new QListWidgetItem(text);
     ui->chatListWidget->addItem( lwi );
     lwi->setTextAlignment(Qt::AlignRight);
-    lwi->setBackgroundColor(Qt::darkRed);
+    lwi->setBackgroundColor(Qt::transparent);
     lwi->setForeground(Qt::green);
-    text.clear();
     ui->inputTextBox->clear();
 
     client->Send(sendMessage);
@@ -80,6 +94,7 @@ void PrivateChat::on_uploadFileButton_clicked()
         lwi->setBackgroundColor(Qt::transparent);
         lwi->setForeground(Qt::green);
         text.clear();
+        delete lwi;
 
     }else{
         QMessageBox::critical(this, "Error", "Could Not Open The File");
@@ -115,3 +130,17 @@ void PrivateChat::UpdateProgressBar(int n){
     ui->downloadProgressBar->setValue(n);
 }
 
+void PrivateChat::UploadEmojis(){
+    for (int i = 0; i < 10; i++) {
+        QString path = "Images/";
+        ui->emojiComboBox->addItem(QIcon(path.append(QString::number(i)).append(".png")), "");
+    }
+    ui->inputTextBox->clear();
+}
+
+void PrivateChat::on_emojiComboBox_currentIndexChanged(int index)
+{
+    QString emojiCode = "emo->";
+    emojiCode.append(QString::number(index));
+    ui->inputTextBox->setText(emojiCode);
+}

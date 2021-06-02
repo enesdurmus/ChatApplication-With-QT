@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     this->server = new Server(this);
+    this->server->m = this;
 }
 
 MainWindow::~MainWindow()
@@ -26,11 +27,9 @@ void MainWindow::on_startServerButton_clicked()
     }
 }
 
-void MainWindow::on_sendButton_clicked()
-{
-    QMap<QString, QString> msg;
-    msg.insert("message", ui->messageTextBox->text());
-    server->Send(Server::clients->at(ui->portNumberTextBox->value()) ,msg);
+void MainWindow::Display(const QString msg){
+    ui->listWidget->addItem(msg);
+    ui->listWidget->scrollToBottom();
 }
 
 void MainWindow::on_quitButton_clicked()
